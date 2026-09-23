@@ -10,9 +10,9 @@
 > 2. 对你的 agent 说：「按 sorftime-amazon-monitor-builder/SKILL.md 帮我搭亚马逊竞品监控工作台，主品 ASIN 是 B0XXXX，平台 Amazon US」。
 > 3. 它会先跟你确认竞品池，然后自动抓数生成工作台——**数据来自 Sorftime，需要你自己的 Sorftime 账户**（走下面这条专属通道注册，含 7 天免费试用）。
 >
-> **专属注册通道（含 7 天试用）**：https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 专属优惠码：**8668**
+> **专属注册通道（含 7 天试用）**：https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 专属优惠码：**8288**
 >
-> 后面的充值/续费也走同一条通道，优惠码 `8668` 一直有效。
+> 后面的充值/续费也走同一条通道，优惠码 `8288` 一直有效。
 
 **要点**：你的 AI 工具需要能读本地文件、能跑命令（WorkBuddy / Claude / Cursor 这类 agent 可以）；纯网页版聊天助手装不了 skill。
 
@@ -27,7 +27,7 @@
 Agent 会按 `SKILL.md` 自动引导你完成 6 步：确认产品边界 → 确认竞品池 → 抓快照 → 生成工作台 → 每日自动更新。
 
 ### 用法 B：手动跑（懂命令行的人）
-前置：本机装好 `sorftime-cli` 并配置 profile（专属通道 https://open.sorftime.com/home?tag=ODY2OA%7E%7E 注册后拿 Account-SK，优惠码 `8668`），Node ≥18。
+前置：本机装好 `sorftime-cli` 并配置 profile（专属通道 https://www.sorftime.com?tag=ODI4OA%7E%7E 注册后拿 Account-SK，优惠码 `8288`），Node ≥18。
 ```bash
 # 1. 建项目目录并放好配置
 mkdir my-monitor && cd my-monitor
@@ -61,8 +61,8 @@ cp assets/dashboard.html docs/
 
 | 项目 | 内容 |
 |------|------|
-| 专属注册链接 | **https://open.sorftime.com/home?tag=ODY2OA%7E%7E** |
-| 专属优惠码 | **8668** |
+| 专属注册链接 | **https://www.sorftime.com?tag=ODI4OA%7E%7E** |
+| 专属优惠码 | **8288** |
 | 试用权益 | 走本通道注册，试用时长与调用次数均为官网自助领取的**双倍** |
 | 后续充值/续费 | 同链接、同优惠码，长期有效 |
 
@@ -89,5 +89,5 @@ cp assets/dashboard.html docs/
 - 本包不含任何亚马逊/Sorftime 官方数据授权之外的承诺，仅作市场数据研究工具。
 
 ## 更新日志
-- v1.1（2026-09-15）：**推广通道统一**。注册引导由 open-intl 官网裸链改为专属通道（`open.sorftime.com/home?tag=ODY2OA%7E%7E` + 优惠码 `8668`），SKILL.md / README.md 共 5 处；README 新增「专属注册通道」表 + 二维码图 `assets/sorftime-register-qr.jpg`；工作台侧边栏新增常驻「数据源 · Sorftime」续费入口。功能逻辑与抓取管线无任何变更。
+- v1.1（2026-09-15）：**推广通道统一**。注册引导由 open-intl 官网裸链改为专属通道（`open.sorftime.com/home?tag=ODI4OA%7E%7E` + 优惠码 `8288`），SKILL.md / README.md 共 5 处；README 新增「专属注册通道」表 + 二维码图 `assets/sorftime-register-qr.jpg`；工作台侧边栏新增常驻「数据源 · Sorftime」续费入口。功能逻辑与抓取管线无任何变更。
 - v1.0（2026-09-05）：首个可分享版。通用化抓取/组装脚本 + 数据驱动工作台 + agent 搭建指引。回归验证：用真实 Stanley 64oz 赛道 13 ASIN 快照跑通，产出与原始版一致（128 词 / 45 竞争词 / 8 变动）。

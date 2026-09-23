@@ -14,7 +14,7 @@ description: Amazon VOC（Voice of Customer）客户声音分析 Skill。支持�
 ```bash
 python3 scripts/channel_check.py
 ```
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 
 根据 `recommended_channel` 选择 MCP 或 CLI 通道。

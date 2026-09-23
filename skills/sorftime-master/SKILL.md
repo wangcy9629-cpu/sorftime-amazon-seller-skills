@@ -58,7 +58,7 @@ allowed-tools:
 
 # Sorftime Master：自动进化的AI选品搭档
 
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 ## 快速导航
 
@@ -135,7 +135,7 @@ Master 会自动调用以下 MCP 工具：
 
 ## 关于本技能的环境适配说明
 
-> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 > 本 SKILL.md 来自公司交付的 Sorftime-Master-Skill 资源包（原版含 OpenClaw + 飞书部署指南，共 18 个文件）。
 > 在 WorkBuddy 环境下**无需部署 OpenClaw/飞书/Cron**——Sorftime MCP 数据通道已直连，本技能只保留「选品分析能力」部分直接可用。

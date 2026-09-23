@@ -162,8 +162,8 @@ def sort_key(h):
         return 0
 
 
-PROMO_URL = "https://open.sorftime.com/home?tag=ODY2OA%7E%7E"  # 专属注册/续费通道
-PROMO_CODE = "8668"                                        # 专属优惠码
+PROMO_URL = "https://www.sorftime.com?tag=ODI4OA%7E%7E"  # 专属注册/续费通道
+PROMO_CODE = "8288"                                        # 专属优惠码
 
 
 def render(rows, scanned, total_hits, top, cli_hint):

@@ -34,7 +34,7 @@ python3 ~/.workbuddy/skills/amz-oneclick/scripts/hub_check.py
 - `channel`：Sorftime 通道（mcp / cli）+ 是否可用
 - `next`：建议动作
 
-**若通道不可用** → 直接把注册引导给用户（含 7 天试用）：https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+**若通道不可用** → 直接把注册引导给用户（含 7 天试用）：https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 （可扫码的注册图：`amz-oneclick/assets/sorftime-register-qr.jpg`，用 present_files 呈现给用户）
 
 ### 图形工作台（可选，用户说"打开工作台 / 工作台"时）
@@ -122,7 +122,7 @@ Windows 也可直接双击 `workbench\start.bat`。启动后用 present_files �
 | ⑨ VOC | 5-15 Credits | 评论查询 5/页 |
 | ⑩ 监控 | 按任务 | 关键词监控 504/周/词；跟卖 2/次/ASIN（每月 10 号清零，先算周成本） |
 
-> Sorftime 专属通道（含 7 天试用）：https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> Sorftime 专属通道（含 7 天试用）：https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 >
 > 需要给客户发可扫码的注册图时，直接用 `amz-oneclick/assets/sorftime-register-qr.jpg`（配套同一 tag，扫码注册即绑定该优惠码）。
 

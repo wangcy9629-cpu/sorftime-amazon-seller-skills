@@ -5,7 +5,7 @@ description: Professional Amazon product research and selection using Sorftime M
 
 # Sorftime 专业卖家选品助手
 
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 基于 Sorftime 方法论 + 2026年AI算法趋势，为专业亚马逊卖家提供一站式数据选品解决方案。
 

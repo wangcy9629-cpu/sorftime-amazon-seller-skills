@@ -11,7 +11,7 @@ description: >
 
 # Multi-ASIN VOC 竞品评论分析
 
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 把一类目下多个竞品 ASIN 的评论变成「谁能打、打哪里、凭什么、怎么验证」的可审计作战报告。
 核心不是主题频次，而是 **ASIN-first 差异**：每个结论都必须挂到具体竞品 ASIN、具体能力维度、

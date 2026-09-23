@@ -14,7 +14,7 @@ description: Sorftime 纯数据驱动的亚马逊广告规划。仅基于 Sorfti
 ```bash
 python3 scripts/channel_check.py
 ```
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://www.sorftime.com?tag=ODI4OA%7E%7E ｜ 优惠码：8288
 
 
 根据输出选择 MCP 或 CLI 通道。默认站点：US（domain=1）。
