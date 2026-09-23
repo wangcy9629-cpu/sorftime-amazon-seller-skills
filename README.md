@@ -42,6 +42,33 @@
 
 ---
 
+## 产出长什么样
+
+下面三张**不是设计稿**，是技能真跑出来的产物 —— 输入一个主推 ASIN，自动发现竞品、反查关键词、监控价格变化，最后生成一个双击就能打开的多页工作台。
+
+### ① 运营总览：今天该关注什么
+
+<img src="assets/screenshots/01-dashboard.jpg" alt="运营总览：AI今日重点" width="100%">
+
+自动标出 P1 / P2 级风险，**每条结论都附证据来源**。例如它会直接告诉你：
+
+> 「Meoky 1Gal 保温瓶 Buybox 由 ZUOZHENGFENG 持有（品牌为 Meoky，非品牌自营名），卖家数 1 → 需人工确认是否被跟卖抢 Buybox」
+> 证据：`sorftime_cli(ProductDetail)`：Buybox=ZUOZHENGFENG / Brand=Meoky / Sellers=1
+
+### ② 关键词词库：128 个词 + 月搜索量 + 你排第几
+
+<img src="assets/screenshots/02-keywords.jpg" alt="关键词词库" width="100%">
+
+按 ASIN 反查去重得到 128 个词，带月搜索量（`water bottle` 2.4M、`hydrojug` 1.5M…）和你在每个词上的最佳排名（#15、#25…）。哪些词该投广告、哪些是流量缺口，一眼看清。
+
+### ③ 竞品变动监控：谁在降价，降了多少
+
+<img src="assets/screenshots/03-price-changes.jpg" alt="竞品变动监控" width="100%">
+
+基于月度均价环比 + 每日快照 diff，P1 = 价差 ≥$5。这张表直接摊开竞品本月的动作 —— 比如 `RTIC 1Gal` 从 $59.99 降到 $54.99、`Stay-Chill 64oz` 从 $44.27 降到 $33.00。
+
+---
+
 ## 安装
 
 ### 第 1 步 · 放技能文件
