@@ -13,7 +13,7 @@ agent_created: true
 
 # 跨境爆品雷达
 
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 ## 卖家要什么 → 你给什么（先问一句：要 1候选池 2打法卡 3日报？缺省给候选池）
 1. **候选池**：当日新命中专供产品表（类目/产品/1688价/30天销量/店铺）→ 卖家自己挑
@@ -33,7 +33,7 @@ agent_created: true
 
 ## 运行
 
-> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 ```bash
 python scripts/baopin_radar.py                                  # 默认词表 → 爆品雷达日报.html

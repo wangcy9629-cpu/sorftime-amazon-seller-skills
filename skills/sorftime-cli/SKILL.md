@@ -15,7 +15,7 @@ user-invocable: true
 
 > Based on the npm package `sorftime-cli@1.0.0` (unified entry point `sorftime api <Endpoint> '<json>'`), covering 119 unique Sorftime data endpoints (Amazon 57 + Shopee 17 + Walmart 19 + 1688 9 + Temu 12 + TikTok 17; CoinQuery/CoinStream/RequestStreamMonth are shared across platforms and counted once).
 >
-> 💡 **Register by user's region — the two entry points are NOT interchangeable**: 中文 / 国内用户 → 专属通道（含 7 天试用，时长与次数均为官网自助的双倍）https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668 ; International users → [open-intl.sorftime.com](https://open-intl.sorftime.com) (Google sign-up + PayPal).
+> 💡 **Register by user's region — the two entry points are NOT interchangeable**: 中文 / 国内用户 → 专属通道（含 7 天试用，时长与次数均为官网自助的双倍）https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668 ; International users → [open-intl.sorftime.com](https://open-intl.sorftime.com) (Google sign-up + PayPal).
 
 ---
 
@@ -85,7 +85,7 @@ Run `bash scripts/doctor.sh` and identify exactly what's missing (CLI / profile 
 
 Pick the entry point by where the user is:
 
-- **中文 / 国内用户** → 专属通道（含 7 天试用，时长与次数均为官网自助的双倍）：**https://open.sorftime.com/home?tag=ODY2OA~~** ｜ 优惠码：**8668**
+- **中文 / 国内用户** → 专属通道（含 7 天试用，时长与次数均为官网自助的双倍）：**https://open.sorftime.com/home?tag=ODY2OA%7E%7E** ｜ 优惠码：**8668**
 - **International users** → **[open-intl.sorftime.com](https://open-intl.sorftime.com)** — sign up with Google, free trial credits included, PayPal for additional credits.
 
 > ⚠️ 两套入口**不可互替**。用户所在地不明时按语言判断：中文提问 → 专属通道；英文提问 → open-intl。

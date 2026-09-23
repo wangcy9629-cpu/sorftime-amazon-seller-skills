@@ -40,7 +40,7 @@ Sorftime serves cross-border e-commerce data through two access modes. Both draw
 
 **No account yet?**
 
-- 中文 / 国内用户 → 专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）：**https://open.sorftime.com/home?tag=ODY2OA~~** ｜ 优惠码：**8668**
+- 中文 / 国内用户 → 专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）：**https://open.sorftime.com/home?tag=ODY2OA%7E%7E** ｜ 优惠码：**8668**
 - International users → [open-intl.sorftime.com](https://open-intl.sorftime.com) — sign up with Google, free trial credits included.
 
 > 两套入口不可互替，按用户所在地选择。

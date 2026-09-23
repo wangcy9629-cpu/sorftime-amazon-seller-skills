@@ -13,7 +13,7 @@ agent_created: true
 
 # 沃尔玛卖家助手（结果版）
 
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 ## 使用规则（省 token）
 1. 一句话给目标即可；缺信息最多补问 1 次。
@@ -30,7 +30,7 @@ agent_created: true
 - 趋势枚举用英文（SalesVolume/Price/Rank…）；评论门槛 <200 视为窗口，但全量展示不硬砍。
 
 ## 数据获取方式（本机环境）
-> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 还没账户？走专属通道注册（含 7 天试用，时长与次数均为官网自助的双倍）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 数据统一走本机 `sorftime` CLI（请先运行 `sorftime whoami` 确认 profile 已就绪）：
 

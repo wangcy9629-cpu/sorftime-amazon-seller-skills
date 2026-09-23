@@ -19,7 +19,7 @@ import sys
 
 SKILLS_ROOT = os.path.expanduser("~/.workbuddy/skills")
 
-REGISTRATION_URL = "https://open.sorftime.com/home?tag=ODY2OA~~"
+REGISTRATION_URL = "https://open.sorftime.com/home?tag=ODY2OA%7E%7E"
 DISCOUNT_CODE = "8668"
 
 CORE = [

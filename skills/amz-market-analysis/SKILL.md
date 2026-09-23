@@ -16,7 +16,7 @@ description: Sorftime 亚马逊市场/类目分析。当用户要分析某个类
 ```bash
 python3 scripts/channel_check.py
 ```
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 
 按 `recommended_channel` 选择 MCP 或 CLI 通道（逻辑同 amz-selection）。默认 site=US（domain=1）。

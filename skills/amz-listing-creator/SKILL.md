@@ -16,7 +16,7 @@ description: Sorftime 亚马逊 Listing 创作与优化。基于 Sorftime 数据
 ```bash
 python3 scripts/channel_check.py
 ```
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 
 根据输出选择通道：

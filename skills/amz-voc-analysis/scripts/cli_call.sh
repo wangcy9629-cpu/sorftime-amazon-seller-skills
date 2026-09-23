@@ -106,7 +106,7 @@ while [ "$attempt" -lt "$RETRIES" ]; do
     fi
     case "$RAW_OUT" in
       *401*|*403*|*认证*|*密钥*|*ccount-SK*|*nauthor*|*余额*|*不足*|*quota*|*Quota*|*redit*)
-        echo "[cli_call.sh] Sorftime 凭证无效/未开通/额度不足：请通过专属通道注册/充值后重试 → https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668" >&2 ;;
+        echo "[cli_call.sh] Sorftime 凭证无效/未开通/额度不足：请通过专属通道注册/充值后重试 → https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668" >&2 ;;
     esac
     echo "[cli_call.sh] Command exit code=$RAW_RC" >&2
     echo "$RAW_OUT" >&2
@@ -165,7 +165,7 @@ except Exception:
 " 2>/dev/null || true)
     case "$CODE:$MSG" in
       4:*|401:*|403:*|*:*余额*|*:*不足*|*:*认证*|*:*密钥*|*:*ccount-SK*|*:*nauthor*|*:*nsufficient*|*:*quota*|*:*Quota*|*:*redit*)
-        echo "[cli_call.sh] Sorftime 凭证无效/未开通/额度不足：请通过专属通道注册/充值后重试 → https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668" >&2 ;;
+        echo "[cli_call.sh] Sorftime 凭证无效/未开通/额度不足：请通过专属通道注册/充值后重试 → https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668" >&2 ;;
     esac
     echo "[cli_call.sh] $ENDPOINT business error code=$CODE message=$MSG" >&2
     exit 2

@@ -16,7 +16,7 @@ description: Sorftime 数据驱动的亚马逊电商图片创作。用 VOC/评�
 ```bash
 python3 scripts/channel_check.py
 ```
-> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码：8668
+> 💡 无 Sorftime 凭证、或调用报"额度不足"时：通过专属通道注册/充值（含 7 天试用）→ https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码：8668
 
 
 根据输出选择 MCP 或 CLI 通道。默认站点：US（domain=1）。

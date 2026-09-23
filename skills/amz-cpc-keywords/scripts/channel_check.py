@@ -13,7 +13,7 @@ import sys
 import subprocess
 import json
 
-REGISTRATION_URL = "https://open.sorftime.com/home?tag=ODY2OA~~"
+REGISTRATION_URL = "https://open.sorftime.com/home?tag=ODY2OA%7E%7E"
 DISCOUNT_CODE = "8668"
 GUIDE_TEXT = (
     "未检测到 Sorftime 访问凭证。\n"

@@ -14,9 +14,12 @@
 
 所有技能都依赖 [Sorftime](https://open.sorftime.com) 的数据接口。没有账号走专属通道注册：
 
-**https://open.sorftime.com/home?tag=ODY2OA~~** ｜ 优惠码 **8668**
+### 👉 [点此注册 Sorftime（含 7 天免费试用）](https://open.sorftime.com/home?tag=ODY2OA%7E%7E) ｜ 优惠码 `8668`
 
 > 专属通道的 7 天免费试用，**时长和调用次数都是官网自助领取的双倍**。后续续费走同一通道，优惠码长期有效。
+>
+> **需要复制链接的场合**请用这一串（`%7E%7E` 就是 `~~` 的 URL 编码，功能完全一样，但贴到微信 / 邮件 / 任何平台都不会被截断）：
+> `https://open.sorftime.com/home?tag=ODY2OA%7E%7E`
 
 <img src="assets/sorftime-register-qr.jpg" width="200" alt="扫码注册 Sorftime">
 
@@ -128,7 +131,7 @@ python3 ~/.workbuddy/skills/amz-selection/scripts/channel_check.py
 ## 常见问题
 
 **Q：提示「凭证无效」或「额度不足」？**
-先跑 `sorftime whoami` 确认 profile。没账号或额度用完 → 专属通道注册 / 充值：https://open.sorftime.com/home?tag=ODY2OA~~ ｜ 优惠码 **8668**
+先跑 `sorftime whoami` 确认 profile。没账号或额度用完 → 专属通道注册 / 充值：https://open.sorftime.com/home?tag=ODY2OA%7E%7E ｜ 优惠码 **8668**
 
 **Q：报 401，但明明配了 key？**
 很可能填的是 MCP key，而 CLI 需要的是 **Account-SK**，两个不一样。
@@ -146,6 +149,8 @@ python3 ~/.workbuddy/skills/amz-selection/scripts/channel_check.py
 本仓库的 SKILL.md / 脚本里带有作者专属的注册 tag（`ODY2OA~~`）和优惠码（`8668`）。
 
 这些推广信息**不会影响任何功能**，但它是这个项目持续更新的动力 —— 如果你 fork 或二次分发，**请保留它**。谢谢。
+
+> 小提示：本仓库所有注册链接都写成 `...tag=ODY2OA%7E%7E` 的形式。`%7E%7E` 就是 `~~` 的 URL 编码 —— 因为原始 tag 以 `~~` 结尾，而 GitHub / 微信这类平台在自动识别链接时会把结尾的 `~` 当成标点吃掉，导致 tag 失效。用编码写法功能完全一致，且任何平台都不会截断。
 
 ---
 
