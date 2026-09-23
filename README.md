@@ -21,7 +21,9 @@
 > **需要复制链接的场合**请用这一串（`%7E%7E` 就是 `~~` 的 URL 编码，功能完全一样，但贴到微信 / 邮件 / 任何平台都不会被截断）：
 > `https://www.sorftime.com?tag=ODI4OA%7E%7E`
 
-<img src="assets/sorftime-register-qr.jpg" width="200" alt="扫码注册 Sorftime">
+<img src="assets/sorftime-register-qr.jpg" width="220" alt="扫码添加作者的企业微信">
+
+> 也可以直接**扫码加我企业微信** —— 有具体问题当面问：要试用、问类目、挑卖家，都比自助注册快。
 
 ---
 
