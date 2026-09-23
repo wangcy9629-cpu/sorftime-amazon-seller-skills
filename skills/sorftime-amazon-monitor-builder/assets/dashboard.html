@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmazonIntelligence · 竞争情报监控系统</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="dashboard-data.js"></script>
+<style>
+  body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f1f5f9}
+  .nav-group-label{font-size:10.5px;letter-spacing:.08em;color:#64748b;font-weight:700;padding:14px 12px 4px}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:13px;color:#475569;border-radius:8px;cursor:pointer;border:none;background:transparent;width:100%;text-align:left}
+  .nav-item:hover{background:#eef2ff;color:#4f46e5}
+  .nav-item.active{background:#4f46e5;color:#fff;font-weight:600}
+  .page{display:none}
+  .page.active{display:block;animation:fadein .18s ease}
+  @keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1}}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+  .stat-label{font-size:12px;color:#64748b}
+  .stat-val{font-size:22px;font-weight:800;color:#0f172a}
+  .stat-sub{font-size:11px;color:#94a3b8}
+  .pill{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:600}
+  .pill-p1{background:#fee2e2;color:#dc2626}
+  .pill-p2{background:#fef3c7;color:#d97706}
+  .pill-ok{background:#dcfce7;color:#16a34a}
+  .pill-gray{background:#f1f5f9;color:#64748b}
+  .pill-blue{background:#dbeafe;color:#2563eb}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;font-weight:700;text-align:left;padding:8px 10px;border-bottom:1px solid #e2e8f0;white-space:nowrap}
+  td{font-size:12.5px;padding:8px 10px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:middle}
+  tr:hover td{background:#f8fafc}
+  .src-tag{font-size:10px;color:#94a3b8;font-family:ui-monospace,Consolas,monospace}
+  .btn{border:1px solid #e2e8f0;background:#fff;border-radius:8px;padding:5px 12px;font-size:12.5px;color:#334155;cursor:pointer}
+  .btn:hover{background:#f8fafc;border-color:#cbd5e1}
+  .btn-primary{background:#4f46e5;border-color:#4f46e5;color:#fff}
+  .btn-primary:hover{background:#4338ca}
+  .btn-sm{padding:3px 10px;font-size:12px;border-radius:6px}
+  .rankcell{font-weight:600}
+  .rk1{color:#dc2626}.rk2{color:#d97706}.rk3{color:#2563eb}.rk4{color:#16a34a}.rk5{color:#7c3aed}
+  input[type=search],input[type=text],select{border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;font-size:12.5px;outline:none}
+  input:focus,select:focus{border-color:#4f46e5;box-shadow:0 0 0 2px rgba(79,70,229,.12)}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+  .toast{position:fixed;bottom:24px;right:24px;z-index:50}
+  .badge-count{background:#ef4444;color:#fff;font-size:10px;border-radius:999px;padding:0 5px;line-height:15px}
+</style>
+</head>
+<body>
+<div class="flex h-screen overflow-hidden">
+
+  <aside class="w-56 bg-white border-r border-slate-200 flex flex-col shrink-0">
+    <div class="px-4 py-4 border-b border-slate-100">
+      <div class="text-[13px] font-extrabold text-slate-900 leading-tight">Amazon<span class="text-indigo-600">Intelligence</span></div>
+      <div class="text-[10.5px] text-slate-400">竞争情报监控系统</div>
+    </div>
+    <nav id="sidebar" class="flex-1 overflow-y-auto px-2 pb-4"></nav>
+    <div class="px-3 py-3 border-t border-slate-100">
+      <a href="https://open.sorftime.com/home?tag=ODY2OA~~" target="_blank" rel="noopener"
+         class="block rounded-lg border border-slate-100 bg-slate-50 hover:bg-indigo-50 transition-colors px-2.5 py-2 no-underline">
+        <div class="text-[10.5px] font-bold text-slate-700">数据源 · Sorftime</div>
+        <div class="text-[10px] text-slate-500 mt-0.5 leading-snug">专属续费通道（含 7 天试用）</div>
+        <div class="text-[10px] font-semibold text-indigo-600 mt-0.5">优惠码：8668 ›</div>
+      </a>
+    </div>
+  </aside>
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="bg-white border-b border-slate-200 px-5 py-2.5 flex items-center gap-3 shrink-0">
+      <div class="flex items-center gap-2 text-[13px] font-semibold text-slate-700">
+        <span class="text-slate-400">监控项目</span>
+        <span id="hd-project" class="text-slate-900">…</span>
+      </div>
+      <span class="pill pill-gray">候选待核验 <span id="hd-cand">0</span></span>
+      <span class="pill pill-gray">站点：<span id="hd-site">US</span></span>
+      <span class="pill pill-ok">状态：<span id="hd-status">ready</span></span>
+      <span class="ml-auto text-[11px] text-slate-400 src-tag" id="hd-cap"></span>
+      <button class="btn btn-sm" onclick="location.reload()">⟳ 刷新</button>
+    </header>
+    <main class="flex-1 overflow-y-auto p-5">
+      <div id="page-root"></div>
+    </main>
+  </div>
+</div>
+<div id="toast-wrap" class="toast space-y-2"></div>
+
+<script>
+"use strict";
+/* ==================== 数据与常量 ==================== */
+const D = window.MONITOR_DATA;
+const ASIN_META = {};
+D.asins.forEach(a => { ASIN_META[a.asin] = a; });
+const BRAND_SHORT = {};
+Object.entries(D.per_asin||{}).forEach(([a,k])=>{ BRAND_SHORT[a]=k.name||a; });
+const MAIN_ASIN = D.meta.main_asin || (D.asins[0]&&D.asins[0].asin);
+const ASIN_ORDER = [MAIN_ASIN].concat(D.asins.filter(a=>a.asin!==MAIN_ASIN).map(a=>a.asin));
+const RL = (D.totals&&D.totals.request_left)||'--';
+const N_ASIN = D.asins.length;
+const N_COMP = Math.max(0, N_ASIN - (MAIN_ASIN?1:0));
+const B0 = (D.meta.captured_at||'').slice(0,10);
+const D0 = B0.slice(5); // '09-04'
+const usd = v => (v==null||isNaN(v)) ? '--' : '$'+Number(v).toFixed(2);
+const fmtVol = v => v ? (v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?(v/1000).toFixed(0)+'K':v) : '--';
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const charts = {};
+function destroyChart(id){ if(charts[id]){ try{charts[id].destroy()}catch(e){} delete charts[id]; } }
+function destroyAll(){ Object.keys(charts).forEach(k=>{ try{charts[k].destroy()}catch(e){} }); for(const k in charts) delete charts[k]; }
+function rankColor(r){ return r<=3?'rk1':r<=8?'rk2':r<=20?'rk3':r<=50?'rk4':'rk5'; }
+function fmtRank(r){ if(r==null) return '<span class="text-slate-300">—</span>'; return '<span class="rankcell '+rankColor(r)+'">#'+r+'</span>'; }
+
+let current = 'dashboard';
+let currentParams = null;
+
+function toast(msg){
+  const w=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='card px-4 py-2.5 text-[13px] text-slate-700 shadow-lg';t.textContent=msg;
+  w.appendChild(t); setTimeout(()=>t.remove(),2600);
+}
+function sugState(){ try{ return JSON.parse(localStorage.getItem('monitor_sug_state')||'{}'); }catch(e){ return {}; } }
+function setSug(i,state){
+  const s=sugState(); s['s'+i]=state; localStorage.setItem('monitor_sug_state', JSON.stringify(s));
+  toast(state==='adopted'?'已记录：采纳建议 → 创建版本记录（未自动修改 Amazon）':(state==='watch'?'已记录：继续观察':'已记录：忽略此建议'));
+  goto('suggest');
+}
+/* 竞品评分（确定性可解释，前端计算，口径标注在页面） */
+function avgPriceNow(){ const dayMap={}; D.asins.forEach(a=>a.price7.forEach(p=>{ (dayMap[p.d]=dayMap[p.d]||[]).push(p.v); })); const ds=Object.keys(dayMap).sort(); const last=dayMap[ds[ds.length-1]]; return last.reduce((s,v)=>s+v,0)/last.length; }
+function scoreOf(a){
+  const k=D.per_asin[a.asin]||{};
+  let s=0;
+  s+=Math.min(20,(a.rating||0)*4);
+  s+=Math.min(15,(k.t10||0)*1.2);
+  s+=Math.min(10,Math.max(0,((k.t20||0)-(k.t10||0)))*0.5);
+  s+=Math.min(10,a.rank!=null?Math.max(0,20-a.rank):0);
+  s+=Math.min(10,a.reviews?Math.log10(a.reviews)*2.2:0);
+  s+=a.fba?6:0;
+  s+=a.buybox==='Amazon'?6:2;
+  const avg=avgPriceNow(); if(a.price&&a.price<avg)s+=Math.min(9,(avg-a.price)/avg*40);
+  return Math.min(99.9,Math.round(s*10)/10);
+}
+function compParts(a){
+  const total=scoreOf(a)||1;
+  const k=D.per_asin[a.asin]||{};
+  const avg=avgPriceNow();
+  const raw=[
+    Math.min(30,(a.brand?18:0)+(a.title?6:0)),
+    Math.min(30,(k.t10||0)*1.5),
+    Math.min(30,(D.pool.filter(p=>p.per[a.asin]&&p.per[a.asin].p).length||0)*1.2),
+    Math.min(30,(k.t20||0)*1.2),
+    Math.min(30,a.rank!=null?Math.max(0,25-a.rank)*1.1:0),
+    Math.min(30,a.price?Math.max(0,30-Math.abs(a.price-avg)*3):0),
+    Math.min(30,a.buybox==='Amazon'?30:18)];
+  const sum=raw.reduce((s,v)=>s+v,0)||1;
+  return raw.map(v=>+((v/sum)*total).toFixed(1));
+}
+function colorOf(asin){ const pal=['#4f46e5','#ef4444','#f59e0b','#0ea5e9','#10b981','#8b5cf6','#f43f5e','#14b8a6','#6366f1','#e11d48','#059669','#d97706','#7c3aed']; const i=ASIN_ORDER.indexOf(asin); return pal[i>=0?i%pal.length:0]||'#6366f1'; }
+function hexA(hex,a){ const h=hex.replace('#',''); const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16); return 'rgba('+r+','+g+','+b+','+a+')'; }
+/* 价格序列（price7 存月度均价快照）按时间窗聚合成平均线 */
+function avgSeries(){ const dayMap={}; D.asins.forEach(a=>a.price7.forEach(p=>{(dayMap[p.d]=dayMap[p.d]||[]).push(p.v);})); const all=Object.keys(dayMap).sort(); const days=all.slice(-12); return {days, avg:days.map(d=>+(dayMap[d].reduce((s,v)=>s+v,0)/dayMap[d].length).toFixed(2))}; }
+
+/* ==================== 页面渲染器 ==================== */
+const PAGES = {};
+
+/* ---------- Dashboard ---------- */
+PAGES.dashboard = {
+  charts: { trend: c=>{}} , // placeholder replaced below
+  render(el){
+    const t=D.totals;
+    const rising=D.changes.filter(x=>x.after>x.before).length;
+    const falling=D.changes.filter(x=>x.after<x.before).length;
+    const msAll=[...new Set(D.asins.flatMap(a=>a.price7.map(p=>p.d)))].sort();
+    const last2=msAll.length>=2?msAll.slice(-2).map(m=>m.slice(5)).join('→'):'--';
+    el.innerHTML=`
+    <div class="mb-4">
+      <div class="text-[16px] font-bold text-slate-900">运营总览</div>
+      <div class="text-[12px] text-slate-500">今天最值得关注的市场变化、排名风险和可执行动作。</div>
+    </div>
+    <div class="grid grid-cols-4 gap-3 mb-4">
+      ${stat('监控 ASIN', t.asins, '已核验 · 自有 '+((D.meta.own_count||1))+' + 竞品 '+N_COMP)}
+      ${stat('核心关键词', t.words, '首轮反查 '+D.meta.topk+'/ASIN 去重')}
+      ${stat('Top 10 词', t.top10_words, '≥1 竞品进入首页前 10')}
+      ${stat('Top 20 词', t.top20_words, '≥1 竞品进入前 20')}
+      ${stat('Top 50 词', t.top50_words, '≥1 竞品进入前 50')}
+      ${stat('直接竞争词', t.pool, '≥2 竞品同词有自然位')}
+      ${stat('月度上行', rising, last2+' 月均价上行 '+rising+' 条')}
+      ${stat('月度下行', falling, last2+' 月均价下行 '+falling+' 条')}
+    </div>
+    <div class="grid grid-cols-3 gap-4 mb-4">
+      <div class="card col-span-2 p-4">
+        <div class="flex items-center justify-between mb-1">
+          <div class="text-[13.5px] font-bold text-slate-800">竞品售价走势 <span class="text-[11px] font-normal text-slate-400 ml-1">月度均价 · 近 12 个月窗口</span></div>
+          <span class="pill pill-blue">基线 ${B0}</span>
+        </div>
+        <div class="text-[10.5px] text-slate-400 mb-2">Sorftime ProductTrend 月度均价（产品上架不足 12 个月按实际窗口展示）；日级价格随每日快照累积</div>
+        <div style="position:relative;height:210px"><canvas id="ch-trend"></canvas></div>
+      </div>
+      <div class="card p-4">
+        <div class="text-[13.5px] font-bold text-slate-800 mb-1">AI 今日重点 <span class="text-[10px] font-normal text-slate-400 ml-1">Evidence-first</span></div>
+        <div class="space-y-2.5" id="ai-signals"></div>
+      </div>
+    </div>
+    <div class="card p-4">
+      <div class="flex justify-between items-center mb-2">
+        <div class="text-[13.5px] font-bold text-slate-800">重点竞品 <span class="text-[11px] font-normal text-slate-400 ml-1">按类目排名排序 · 首轮基线 ${B0}</span></div>
+        <button class="btn btn-sm" onclick="goto('data')">查看全部 →</button>
+      </div>
+      <table class="w-full"><thead><tr><th>ASIN</th><th>竞品</th><th>Score</th><th>价格</th><th>Rating</th><th>Review</th><th>BSR</th><th>FBA</th><th></th></tr></thead>
+      <tbody id="tbl-top"></tbody></table>
+    </div>`;
+    const sg=document.getElementById('ai-signals');
+    D.signals.forEach(s=>{
+      const d=document.createElement('div');
+      d.className='rounded-lg border p-2.5 '+(s.lvl==='P1'?'border-red-100 bg-red-50/50':'border-amber-100 bg-amber-50/50');
+      d.innerHTML=`<div class="flex items-center gap-1.5 mb-1"><span class="text-[11.5px] font-bold text-slate-700">${esc(s.title)}</span><span class="pill ${s.lvl==='P1'?'pill-p1':'pill-p2'}">${s.lvl}</span></div>
+        <div class="text-[11px] text-slate-600 mb-1">${esc(s.reason)}</div>
+        <div class="text-[10px] src-tag">证据：${esc(s.evidence)}</div>`;
+      sg.appendChild(d);
+    });
+    const tb=document.getElementById('tbl-top');
+    [...D.asins].sort((a,b)=>(a.rank||99)-(b.rank||99)).forEach(a=>{
+      tb.insertAdjacentHTML('beforeend',`<tr>
+        <td class="font-mono text-[11.5px]">${a.asin}</td>
+        <td><div class="font-semibold text-slate-800">${BRAND_SHORT[a.asin]}</div><div class="text-[10.5px] text-slate-400 max-w-[200px] truncate">${esc(a.brand)} · ${esc(a.cat||'')}</div></td>
+        <td><span class="font-bold text-indigo-600">${scoreOf(a).toFixed(1)}</span></td>
+        <td>${usd(a.price)}</td><td>${a.rating||'--'} ★</td><td>${fmtVol(a.reviews)}</td><td>#${a.rank??'--'}</td>
+        <td>${a.fba?'<span class="pill pill-ok">FBA</span>':'<span class="pill pill-p1">跟</span>'}</td>
+        <td><button class="btn btn-sm" onclick="goto('detail',{asin:'${a.asin}'})">详情</button></td></tr>`);
+    });
+  }
+};
+PAGES.dashboard.charts = {
+  trend(c){ // 竞品售价走势：月度均价，最近 12 个月窗口
+    destroyChart('trend');
+    const ms=[...new Set(D.asins.flatMap(a=>a.price7.map(p=>p.d)))].sort().slice(-12);
+    const mk=a=>ms.map(m=>{const f=a.price7.find(p=>p.d===m); return f?f.v:null;});
+    charts['trend']=new Chart(c,{type:'line',data:{labels:ms,datasets:D.asins.map(a=>({label:BRAND_SHORT[a.asin],data:mk(a),borderColor:colorOf(a.asin),backgroundColor:hexA(colorOf(a.asin),0.09),spanGaps:true,tension:.25,pointRadius:2,borderWidth:2}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10.5},boxWidth:12}}},scales:{y:{ticks:{font:{size:10},callback:v=>'$'+v},title:{display:true,text:'USD',font:{size:10}}},x:{ticks:{font:{size:10}}}}}});
+  }
+};
+
+/* ---------- 我的产品（自有 ASIN） ---------- */
+PAGES.myasin = { render(el){
+  const a=ASIN_META[MAIN_ASIN]||D.asins[0];
+  if(!a){ el.innerHTML='<div class="card p-8 text-slate-400">未配置自有 ASIN</div>'; return; }
+  const k=D.per_asin[a.asin]||{};
+  const tierC={}; D.asins.forEach(x=>{ if(x.asin!==MAIN_ASIN) tierC[x.tier]=(tierC[x.tier]||0)+1; });
+  const inPool=D.pool.filter(p=>p.per[a.asin]&&p.per[a.asin].p).length;
+  const sugN=D.suggestions.filter(s=>s.asin===MAIN_ASIN).length;
+  const tiers=Object.entries(tierC).sort((x,y)=>x[0].localeCompare(y[0])).map(([t,n])=>`<span class="pill ${t==='P1'?'pill-p1':'pill-p2'}">${t} × ${n}</span>`).join('');
+  el.innerHTML=`<div class="card p-5">
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-[15px] font-bold text-slate-900">我的产品 <span class="pill pill-blue ml-1">自有 ASIN</span></div>
+      <div class="text-[11px] src-tag">项目 ${esc(D.meta.project)} · 快照 ${B0} · sorftime_cli</div>
+    </div>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="col-span-2">
+        <div class="rounded-xl border border-slate-200 p-4">
+          <div class="flex items-start gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="font-mono text-[11px] text-indigo-500 mb-1">${a.asin} · ${esc(a.brand)}</div>
+              <div class="text-[13.5px] font-bold text-slate-900 leading-snug">${esc(a.title)}</div>
+              <div class="text-[10.5px] text-slate-400 mt-1">${esc(a.subcategory||a.cat||'')}（${esc(a.top_category||'')}）</div>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-[26px] font-extrabold text-indigo-600">${usd(a.price)}</div>
+              <div class="text-[10.5px] text-slate-400">当前实时价</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-6 gap-2 mt-4">
+            ${mini('Rating',(a.rating||'--')+' ★')}${mini('Review',fmtVol(a.reviews))}
+            ${mini('月销(估)',a.est_month?fmtVol(a.est_month):'--')}${mini('月销额',a.est_amount?usd(a.est_amount):'--')}
+            ${mini('子类目排名','#'+(a.rank??'--'))}${mini('FBA',a.fba?'是':'否')}
+            ${mini('Buybox',esc((a.buybox||'--').slice(0,14)))}${mini('毛利率',a.gross_profit_rate!=null?a.gross_profit_rate.toFixed(0)+'%':'--')}
+            ${mini('上架',a.online_date&&a.online_date!=='Unknown'?a.online_date:'--')}${mini('变体',a.variation_count??'--')}
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-200 p-4 mt-4">
+          <div class="text-[13px] font-bold text-slate-800 mb-1">自动发现竞品池（已完成）</div>
+          <div class="text-[11.5px] text-slate-500 mb-2">基于产品边界交叉检索，入池 ${N_COMP} 个竞品：${tiers}</div>
+          <div class="text-[11.5px] text-slate-600 leading-relaxed bg-slate-50 rounded-lg p-3"><b>产品边界：</b>${esc(D.meta.boundary||'--')}</div>
+        </div>
+      </div>
+      <div class="space-y-4">
+        <div class="rounded-xl border border-slate-200 p-4">
+          <div class="text-[12.5px] font-bold text-slate-800 mb-1">自有 ASIN 竞争力</div>
+          <div class="text-[30px] font-extrabold text-indigo-600">${scoreOf(a).toFixed(1)}<span class="text-[11px] text-slate-400 font-normal"> /100</span></div>
+          <div class="grid grid-cols-3 gap-1.5 mt-3 text-center">
+            ${kwStat('自然词',k.org||0)}${kwStat('Top10',k.t10||0)}${kwStat('Top20',k.t20||0)}
+            ${kwStat('Top50',k.t50||0)}${kwStat('广告词',k.ad||0)}${kwStat('竞争词池',inPool)}
+          </div>
+          <div class="mt-3 space-y-1.5 text-[11.5px] border-t border-slate-100 pt-3">
+            <div class="flex justify-between"><span class="text-slate-500">关键词缺口（Gap）</span><b class="text-red-500">${D.gaps.length}</b></div>
+            <div class="flex justify-between"><span class="text-slate-500">Listing 优化建议</span><b>${sugN}</b></div>
+            <div class="flex justify-between"><span class="text-slate-500">价格变化事件</span><b>${D.changes.length}</b></div>
+          </div>
+        </div>
+        <div class="rounded-xl border border-slate-200 p-4">
+          <div class="text-[12.5px] font-bold text-slate-800 mb-2">下一步动作</div>
+          <div class="space-y-1.5 text-[12px]">
+            <div class="cursor-pointer text-indigo-600 hover:underline" onclick="goto('gap')">查看 Keyword Gap（${D.gaps.length}） →</div>
+            <div class="cursor-pointer text-indigo-600 hover:underline" onclick="goto('suggest')">处理优化建议（${sugN}） →</div>
+            <div class="cursor-pointer text-indigo-600 hover:underline" onclick="goto('changes')">核对价格变动（${D.changes.length}） →</div>
+            <div class="cursor-pointer text-indigo-600 hover:underline" onclick="goto('auto')">自动化任务设置 →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}};
+
+/* ---------- 产品详情 / 竞品详情 ---------- */
+PAGES.detail = {
+  render(el,params){
+    const asin=(params&&params.asin)||ASIN_ORDER[0];
+    const a=ASIN_META[asin]; if(!a){el.innerHTML='<div class="card p-8 text-slate-400">未找到</div>';return;}
+    const k=D.per_asin[asin]||{};
+    const parts=compParts(a);
+    const partLabels=['产品形态','功能','关键词重合','购买意图','使用场景','价格带','类目'];
+    el.innerHTML=`
+    <div class="mb-3 flex items-start justify-between">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-bold tracking-wider text-indigo-500">${asin===MAIN_ASIN?'MY PRODUCT · 自有主品':'COMPETITOR DETAIL'}</span>
+          <span class="font-mono text-[12px] text-slate-500">${asin}</span>
+          ${asin===MAIN_ASIN?'<span class="pill pill-blue">自有</span>':(a.tier?`<span class="pill ${a.tier==='P1'?'pill-p1':'pill-p2'}">${a.tier}</span>`:'')}
+        </div>
+        <div class="text-[15px] font-bold text-slate-900 leading-snug mt-0.5 max-w-[760px]">${esc(a.title)}</div>
+      </div>
+      <button class="btn btn-sm" onclick="goto('data')">← 返回列表</button>
+    </div>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="card p-4">
+        <div class="text-[12px] text-slate-500">Competitor Score</div>
+        <div class="text-[34px] font-extrabold text-indigo-600">${scoreOf(a).toFixed(1)}</div>
+        <div class="text-[10.5px] text-slate-400 mb-2">查看长期监控竞品、评分构成和当前市场表现</div>
+        <div style="position:relative;height:190px"><canvas id="ch-score"></canvas></div>
+        <div class="text-[10px] src-tag mt-2">评分构成基于可观测指标（排名/关键词/价格带）计算，口径见页脚</div>
+      </div>
+      <div class="col-span-2 space-y-4">
+        <div class="card p-4">
+          <div class="text-[13px] font-bold text-slate-800 mb-2">当前数据</div>
+          <div class="grid grid-cols-4 gap-3 text-center">
+            ${mini('价格',usd(a.price))}${mini('Rating',(a.rating||'--')+' ★')}${mini('Review',fmtVol(a.reviews))}${mini('类目排名','#'+(a.rank??'--'))}
+            ${mini('月销(估)',a.est_month?fmtVol(a.est_month):'--')}${mini('FBA',a.fba?'是':'否')}${mini('Buybox',esc((a.buybox||'--').slice(0,16)))}${mini('卖家数',a.sellers??'--')}
+          </div>
+          ${a.deal?`<div class="mt-2"><span class="pill pill-p2">Deal：${esc(a.deal)}</span><span class="text-[11px] text-slate-500 ml-1">${usd(a.list)} → ${usd(a.price)}</span></div>`:''}
+        </div>
+        <div class="card p-4">
+          <div class="text-[13px] font-bold text-slate-800 mb-2">关键词覆盖（Top200 反查）</div>
+          <div class="grid grid-cols-5 gap-2 mb-3 text-center">
+            ${kwStat('自然词',k.org||0)}${kwStat('Top10',k.t10||0)}${kwStat('Top20',k.t20||0)}${kwStat('Top50',k.t50||0)}${kwStat('广告词',k.ad||0)}
+          </div>
+          <div class="text-[11px] text-slate-500 mb-2">该 ASIN 排名最靠前的共享流量词</div>
+          <div id="kw-best" class="flex flex-wrap gap-1.5"></div>
+        </div>
+        <div class="card p-4">
+          <div class="text-[13px] font-bold text-slate-800 mb-2">价格轨迹 <span class="text-[10.5px] font-normal text-slate-400">月度均价 · 近 12 个月窗口</span></div>
+          <div class="text-[10.5px] text-slate-400 mb-1">Sorftime ProductTrend 月度均价；日级价格随每日快照累积</div>
+          <div style="position:relative;height:150px"><canvas id="ch-p7"></canvas></div>
+        </div>
+      </div>
+    </div>`;
+    const kb=document.getElementById('kw-best');
+    const pool=D.pool.filter(p=>p.per[asin]&&p.per[asin].p).sort((x,y)=>x.per[asin].p-y.per[asin].p).slice(0,12);
+    pool.forEach(p=>kb.insertAdjacentHTML('beforeend',`<span class="pill ${p.per[asin].p<=10?'pill-p1':p.per[asin].p<=20?'pill-p2':'pill-gray'}">${esc(p.w)} #${p.per[asin].p}</span>`));
+    if(!pool.length) kb.innerHTML='<span class="text-[11.5px] text-slate-400">无共享流量词记录（Top200 内未与池内其他 ASIN 重叠）</span>';
+    el._charts={asin,parts,partLabels,a};
+  },
+};
+
+/* ---------- 竞品发现 ---------- */
+PAGES.discovery={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">竞品发现</div>
+    <div class="text-[12px] text-slate-500 mb-3">产品信息和产品边界是自动发现竞品与关键词的基础。当前为自动发现 + 人工确认的 ${N_ASIN} ASIN 监控池（自有 ${D.meta.own_count||1} + 竞品 ${N_COMP}）；competitor_discovery 每周一运行后在此补充新候选。</div>
+    <table class="w-full"><thead><tr><th>ASIN</th><th>产品</th><th>来源</th><th>状态</th></tr></thead><tbody>
+      ${D.asins.map(a=>`<tr><td class="font-mono text-[11.5px]">${a.asin}</td><td><div class="font-semibold">${BRAND_SHORT[a.asin]}</div><div class="text-[10.5px] text-slate-400 truncate max-w-[320px]">${esc(a.title)}</div></td><td><span class="src-tag">${a.asin===MAIN_ASIN?'自有 ASIN · 用户指定':'自动发现 · Sorftime 检索'}</span></td><td><span class="pill ${a.asin===MAIN_ASIN?'pill-blue':'pill-ok'}">${a.asin===MAIN_ASIN?'自有':'已验证'}</span></td></tr>`).join('')}
+    </tbody></table>
+  </div>`;
+}};
+
+/* ---------- 竞品池 ---------- */
+PAGES.pool={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">竞品池</div>
+    <div class="text-[12px] text-slate-500 mb-3">监控池 = 自有 1 + 竞品 ${N_COMP}；表格按类目排名排序，自有主品置顶（★ 标记）。</div>
+    <div class="flex items-center gap-3 mb-3 text-[12px]">
+      <span class="text-slate-600">共 <b class="text-indigo-600">${D.asins.length}</b> 个已核验 ASIN</span><span class="text-slate-400">·</span>
+      <span class="text-slate-600">候选待核验 <b>0</b></span>
+      <input type="search" placeholder="搜索ASIN、品牌或标题" class="ml-auto w-64" oninput="renderPoolTb(this.value)">
+    </div>
+    <table class="w-full"><thead><tr><th>ASIN</th><th>等级</th><th>Score</th><th>价格</th><th>Rating</th><th>Review</th><th>BSR</th><th>类目</th><th>FBA</th><th></th></tr></thead>
+    <tbody id="pool-tb"></tbody></table>
+    <div class="text-[10.5px] src-tag mt-2">数据源：sorftime_cli(ProductRequest)</div>
+  </div>`;
+  renderPoolTb('');
+}};
+function renderPoolTb(q){
+  const tb=document.getElementById('pool-tb'); if(!tb)return;
+  q=(q||'').toLowerCase();
+  const rows=[...D.asins].filter(a=>!q||a.asin.toLowerCase().includes(q)||(a.brand||'').toLowerCase().includes(q)||(a.title||'').toLowerCase().includes(q));
+  tb.innerHTML=rows.map(a=>`<tr>
+    <td class="font-mono text-[11.5px]">${a.asin}${a.asin===MAIN_ASIN?' <span class="pill pill-blue">自有</span>':''}</td>
+    <td><span class="pill ${a.rank<=3?'pill-p1':a.rank<=8?'pill-p2':'pill-blue'}">#${a.rank??'--'}</span></td>
+    <td><span class="font-bold text-indigo-600">${scoreOf(a).toFixed(1)}</span></td>
+    <td>${usd(a.price)}</td><td>${a.rating||'--'}★</td><td>${fmtVol(a.reviews)}</td><td>#${a.rank??'--'}</td>
+    <td class="text-[11px]">${esc(a.cat||'--')}</td>
+    <td>${a.fba?'<span class="pill pill-ok">FBA</span>':'<span class="pill pill-p1">跟</span>'}</td>
+    <td><button class="btn btn-sm" onclick="goto('detail',{asin:'${a.asin}'})">详情</button></td></tr>`).join('')
+    ||'<tr><td colspan="10" class="text-center py-6 text-slate-400">无匹配</td></tr>';
+}
+
+/* ---------- 竞品数据 ---------- */
+PAGES.data={render(el){
+  el.innerHTML=`
+  <div class="flex items-center justify-between mb-3">
+    <div><div class="text-[15px] font-bold text-slate-900">竞品数据</div>
+    <div class="text-[12px] text-slate-500">集中查看价格、评价、BSR、类目和数据来源等当前字段。</div></div>
+    <button class="btn btn-primary btn-sm" onclick="toast('已触发立即快照：ProductRequest × '+N_ASIN+'（消耗 '+N_ASIN+' Request）')">⟳ 立即快照</button>
+  </div>
+  <div class="card p-4">
+    <table class="w-full"><thead><tr><th>ASIN</th><th>竞品</th><th>价格</th><th>List</th><th>Rating</th><th>Review</th><th>BSR</th><th>月销(估)</th><th>Buybox</th><th>卖家</th><th>FBA</th><th>源</th></tr></thead>
+    <tbody>${D.asins.map(a=>`<tr>
+      <td class="font-mono text-[11.5px]">${a.asin}</td>
+      <td><div class="font-semibold text-[12px]">${BRAND_SHORT[a.asin]}${a.asin===MAIN_ASIN?' <span class="pill pill-blue">自有</span>':''}</div></td>
+      <td class="font-bold">${usd(a.price)}</td>
+      <td class="${a.deal?'text-red-500 line-through':''}">${usd(a.list)}</td>
+      <td>${a.rating||'--'}★</td><td>${fmtVol(a.reviews)}</td><td>#${a.rank??'--'}</td>
+      <td>${a.est_month?fmtVol(a.est_month):'--'}</td>
+      <td class="text-[11px]">${esc((a.buybox||'--').slice(0,14))}</td><td>${a.sellers??'--'}</td>
+      <td>${a.fba?'<span class="pill pill-ok">FBA</span>':'<span class="pill pill-p1">非</span>'}</td>
+      <td><span class="src-tag">sorftime</span></td></tr>`).join('')}</tbody></table>
+    <div class="text-[10.5px] src-tag mt-2">口径：价格为美分换算；BSR 为类目排名；月销为 Sorftime AsinSalesCount 估计口径，不做“精确昨日变化”表述。快照：${(D.meta.snapshot_files[0]&&D.meta.snapshot_files[0].file)||D.meta.baseline+'.daily.json'}</div>
+  </div>`;
+}};
+
+/* ---------- 竞品历史快照 ---------- */
+PAGES.snapshot={render(el){
+  const filesHtml=(D.meta.snapshot_files||[]).map(f=>`<div class="rounded-lg border border-slate-200 p-3 flex items-center gap-3 mb-2">
+      <span class="text-[18px]">📸</span>
+      <div><div class="text-[13px] font-semibold text-slate-800">${f.file}</div>
+      <div class="text-[10px] src-tag">${esc(f.note||'')} · ${N_ASIN} ASIN · captured ${esc(D.meta.captured_at)}</div></div>
+      <span class="pill pill-ok ml-auto">${esc(f.tag||'快照')}</span>
+    </div>`).join('');
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">竞品历史快照</div>
+    <div class="text-[12px] text-slate-500 mb-4">已保存快照 · 每个快照文件含实时详情 / 关键词反查 / 月度价格趋势。首轮基线 ${B0} 已入库；历史折线将随每日定时快照（competitor_snapshot）累积。</div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="rounded-xl border border-slate-200 p-4">
+        <div class="text-[13px] font-bold text-slate-800 mb-1">竞品平均售价 <span class="text-[11px] font-normal text-slate-400">月度均价 · 近 12 个月窗口</span></div>
+        <div style="position:relative;height:140px"><canvas id="ch-avg"></canvas></div>
+        <div class="text-[10.5px] text-slate-400 mt-1">竞品平均售价 = 当月有价格快照 ASIN 的平均（Sorftime ProductTrend 月度均价）</div>
+      </div>
+      <div class="rounded-xl border border-slate-200 p-4">
+        <div class="text-[13px] font-bold text-slate-800 mb-1">竞品 BSR 中位数 <span class="text-[11px] font-normal text-slate-400">基线 · 数值越低越好</span></div>
+        <div style="position:relative;height:140px"><canvas id="ch-bsr"></canvas></div>
+        <div class="text-[10.5px] text-slate-400 mt-1">竞品 BSR 中位数只使用有 BSR 的竞品快照（首日单点，随快照累积成线）</div>
+      </div>
+    </div>
+    <div class="mt-4 text-[12px] text-slate-600 mb-2">已保存快照文件</div>
+    ${filesHtml}
+  </div>`;
+},charts:{
+  avg(c){
+    destroyChart('avg');
+    const dayMap={}; D.asins.forEach(a=>a.price7.forEach(p=>{(dayMap[p.d]=dayMap[p.d]||[]).push(p.v);}));
+    const days=Object.keys(dayMap).sort().slice(-12);
+    const avg=days.map(d=>+(dayMap[d].reduce((s,v)=>s+v,0)/dayMap[d].length).toFixed(2));
+    charts['avg']=new Chart(c,{type:'line',data:{labels:days,datasets:[{data:avg,borderColor:'#6366f1',backgroundColor:hexA('#6366f1',0.13),fill:true,tension:.25,pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10},callback:v=>'$'+v}},x:{ticks:{font:{size:10}}}}}});
+  },
+  bsr(c){
+    destroyChart('bsr');
+    const arr=D.asins.map(a=>a.rank).filter(v=>v!=null).sort((x,y)=>x-y);
+    const mid=arr[Math.floor(arr.length/2)];
+    charts['bsr']=new Chart(c,{type:'bar',data:{labels:[B0.slice(5)],datasets:[{data:[mid],backgroundColor:hexA('#0ea5e9',0.8),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10}}},x:{ticks:{font:{size:10}}}}}});
+  }
+}};
+
+/* ---------- 竞品变动监控 ---------- */
+PAGES.changes={render(el){
+  const ch=[...D.changes].reverse();
+  const dayMap={}; D.asins.forEach(a=>a.price7.forEach(p=>{(dayMap[p.d]=dayMap[p.d]||[]).push(p.v);}));
+  const days=Object.keys(dayMap).sort().slice(-12);
+  const avg=days.map(d=>+(dayMap[d].reduce((s,v)=>s+v,0)/dayMap[d].length).toFixed(2));
+  el.innerHTML=`
+  <div class="flex items-center justify-between mb-3">
+    <div><div class="text-[15px] font-bold text-slate-900">竞品变动监控</div>
+    <div class="text-[12px] text-slate-500">价格等已记录变化 · 基于月度均价环比 + 每日快照 diff</div></div>
+    <span class="pill pill-p1">${D.changes.length} 条变化</span>
+  </div>
+  <div class="grid grid-cols-3 gap-4 mb-4">
+    <div class="card p-4">
+      <div class="stat-label mb-1">竞品平均售价 <span class="text-[10px]">月度</span></div>
+      <div class="stat-val">${usd(avg[avg.length-1])}</div>
+      <div class="stat-sub">最近 12 个月窗口 · 月度均价均值</div>
+      <div style="position:relative;height:80px" class="mt-2"><canvas id="ch-avg-sm"></canvas></div>
+    </div>
+    <div class="card p-4">
+      <div class="stat-label mb-1">每日变化事件</div>
+      <div class="stat-val text-red-500">${D.changes.length} 条</div>
+      <div class="stat-sub">价格、BSR 等已记录变化</div>
+      <div class="flex gap-2 mt-3 text-[11px]">
+        ${D.changes.filter(x=>x.after<x.before).length?`<span class="pill pill-p1">↓ 降价 ${D.changes.filter(x=>x.after<x.before).length}</span>`:''}
+        ${D.changes.filter(x=>x.after>x.before).length?`<span class="pill pill-p2">↑ 涨价 ${D.changes.filter(x=>x.after>x.before).length}</span>`:''}
+      </div>
+    </div>
+    <div class="card p-4">
+      <div class="stat-label mb-1">月度环比波动竞品</div>
+      <div class="space-y-1.5 mt-1" id="vol-asin"></div>
+    </div>
+  </div>
+  <div class="card p-4">
+    <div class="text-[13.5px] font-bold text-slate-800 mb-2">月度均价环比变化记录</div>
+    <table class="w-full"><thead><tr><th>快照日期</th><th>竞品 ASIN</th><th>字段</th><th>之前</th><th>之后</th><th>级别</th><th>来源</th></tr></thead>
+    <tbody>${ch.map(x=>`<tr>
+      <td class="whitespace-nowrap">${B0.slice(0,5)}${x.date}</td>
+      <td class="font-mono text-[11px]">${x.asin} <span class="text-slate-400">${BRAND_SHORT[x.asin]}</span></td>
+      <td>${x.field}</td>
+      <td class="text-slate-400 line-through">${usd(x.before)}</td>
+      <td class="font-bold ${x.after<x.before?'text-red-500':'text-amber-600'}">${usd(x.after)} ${x.after<x.before?'↓':'↑'}</td>
+      <td>${x.lvl==='P1'?'<span class="pill pill-p1">P1</span>':'<span class="pill pill-p2">P2</span>'}</td>
+      <td><span class="src-tag">${esc(x.src)}</span></td></tr>`).join('')}</tbody></table>
+    <div class="text-[10px] src-tag mt-2">口径：基于 Sorftime ProductTrend 月度均价序列的月末环比；P1 = 环比价差 ≥ $5；首轮基线无“昨日”参照，事件由趋势序列回溯得出</div>
+  </div>`;
+  const va=document.getElementById('vol-asin');
+  const by={};
+  D.changes.forEach(x=>{by[x.asin]=by[x.asin]||{n:0,lo:null,hi:null};by[x.asin].n++;by[x.asin].lo=by[x.asin].lo==null?x.after:Math.min(by[x.asin].lo,x.after);by[x.asin].hi=by[x.asin].hi==null?x.after:Math.max(by[x.asin].hi,x.after);});
+  Object.entries(by).sort((a,b)=>b[1].n-a[1].n).forEach(([asin,v])=>{
+    va.insertAdjacentHTML('beforeend',`<div class="flex items-center gap-2 text-[12px]"><span class="font-semibold text-slate-700">${BRAND_SHORT[asin]}</span><span class="text-slate-400 text-[10.5px]">${v.n}次</span><span class="ml-auto font-mono text-[10.5px]">${usd(v.lo)} ~ ${usd(v.hi)}</span></div>`);
+  });
+},charts:{
+  'ch-avg-sm':(c)=>{ // note: canvas id in html is ch-avg-sm, but key below handles by id
+  }
+}};
+/* 变动监控页迷你图（canvas id = ch-avg-sm，key 与之精确对应） */
+PAGES.changes.charts = {
+  'ch-avg-sm'(c){
+    destroyChart(c.id);
+    const dayMap={};D.asins.forEach(a=>a.price7.forEach(p=>{(dayMap[p.d]=dayMap[p.d]||[]).push(p.v);}));
+    const days=Object.keys(dayMap).sort().slice(-12);const avg=days.map(d=>+(dayMap[d].reduce((s,v)=>s+v,0)/dayMap[d].length).toFixed(2));
+    charts[c.id]=new Chart(c,{type:'line',data:{labels:days,datasets:[{data:avg,borderColor:'#6366f1',backgroundColor:hexA('#6366f1',0.2),fill:true,tension:.3,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{font:{size:9},callback:v=>'$'+v},grid:{display:false}}}}});
+  }
+};
+
+/* ---------- 关键词词库 ---------- */
+PAGES.kwlib={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div><div class="text-[15px] font-bold text-slate-900">关键词词库</div>
+      <div class="text-[12px] text-slate-500">Top200/ASIN 反查去重 · 共 <b class="text-indigo-600">${D.totals.words}</b> 词（展示前 400，按月搜索量）</div></div>
+      <input type="search" placeholder="搜索关键词 / 中文名…" class="w-72" oninput="renderKwl(this.value)">
+    </div>
+    <table class="w-full"><thead><tr><th>关键词</th><th>中文名</th><th>月搜索量</th><th>覆盖竞品</th><th>最佳排名</th></tr></thead>
+    <tbody id="kw-tb"></tbody></table>
+    <div class="text-[10.5px] src-tag mt-2">数据源：sorftime_cli(ASINRequestKeyword, pageSize=200)</div>
+  </div>`;
+  renderKwl('');
+}};
+function renderKwl(q){
+  const tb=document.getElementById('kw-tb'); if(!tb)return;
+  q=(q||'').toLowerCase();
+  const rows=D.wordlist.filter(x=>!q||x.w.toLowerCase().includes(q)||(x.cn||'').toLowerCase().includes(q));
+  tb.innerHTML=rows.slice(0,400).map(x=>`<tr><td class="font-semibold text-slate-800">${esc(x.w)}</td><td class="text-slate-500">${esc(x.cn||'--')}</td><td class="font-mono">${fmtVol(x.vol)}</td><td>${x.cc}</td><td>${fmtRank(x.best)}</td></tr>`).join('')
+  ||'<tr><td colspan="5" class="text-center py-6 text-slate-400">无匹配</td></tr>';
+}
+
+/* ---------- 关键词排行 ---------- */
+PAGES.kwrank={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div><div class="text-[15px] font-bold text-slate-900">关键词排行</div>
+      <div class="text-[12px] text-slate-500">查看关键词搜索量、最佳竞品排名和趋势状态。<span class="text-slate-400 ml-1">当前排名字段来自已保存的排名快照（${B0}）</span></div></div>
+      <button class="btn btn-sm" onclick="toast('已刷新排名（ASINRequestKeyword × '+N_ASIN+'，消耗 '+N_ASIN+' Request）')">⟳ 刷新排名</button>
+    </div>
+    <div class="flex items-center gap-2 mb-3">
+      <input type="search" placeholder="搜索关键词…" class="w-64" oninput="renderKwr(this.value,document.getElementById('kr-f').value)">
+      <select id="kr-f" class="text-[12px]" onchange="renderKwr(document.getElementById('kr-q').value,this.value)"><option value="0">全部等级</option><option value="10">仅 Top10</option><option value="20">仅 Top20</option></select>
+    </div>
+    <table class="w-full"><thead><tr><th>关键词</th><th>等级</th><th>搜索量</th><th>最佳竞品排名</th><th>来源窗口</th><th>数据源</th></tr></thead>
+    <tbody id="kr-tb"></tbody></table>
+    <div class="text-[10.5px] src-tag mt-2">直接竞争词（≥2 竞品覆盖）按覆盖数 × 搜索量排序展示 Top 80</div>
+  </div>`;
+  const iq=document.querySelector('#page-root input[type=search]');
+  renderKwr('','0');
+}};
+function renderKwr(q,f){
+  const tb=document.getElementById('kr-tb'); if(!tb)return;
+  q=(q||'').toLowerCase(); f=parseInt(f||'0',10);
+  const rows=D.pool.filter(x=>(!q||x.w.toLowerCase().includes(q))&&(!f||(x.best&&x.best<=f)));
+  tb.innerHTML=rows.map(x=>{
+    const who=Object.entries(x.per).filter(([a,v])=>v.p).sort((a,b)=>a[1].p-b[1].p)[0];
+    return `<tr><td class="font-semibold text-slate-800">${esc(x.w)}</td>
+      <td>${x.best&&x.best<=10?'<span class="pill pill-p1">Top10</span>':x.best&&x.best<=20?'<span class="pill pill-p2">Top20</span>':'<span class="pill pill-gray">Top50</span>'}</td>
+      <td class="font-mono">${fmtVol(x.vol)}</td>
+      <td>${who?fmtRank(who[1].p)+' <span class="text-slate-400 text-[10.5px]">'+BRAND_SHORT[who[0]]+'</span>':'--'}</td>
+      <td class="text-[11px] text-slate-500">快照 ${B0}</td>
+      <td><span class="src-tag">sorftime_cli</span></td></tr>`;}).join('')
+  ||'<tr><td colspan="6" class="text-center py-6 text-slate-400">无匹配</td></tr>';
+}
+
+/* ---------- ASIN关键词排行 ---------- */
+PAGES.asinkw={render(el){
+  const sel=(currentParams&&currentParams.asin)||ASIN_ORDER[0];
+  el.innerHTML=`<div class="card p-4">
+    <div class="flex items-center justify-between mb-3">
+      <div><div class="text-[15px] font-bold text-slate-900">ASIN 关键词排行</div>
+      <div class="text-[12px] text-slate-500">单个 ASIN 在其流量词下的自然 / 广告位排名</div></div>
+      <select class="text-[12px]" onchange="goto('asinkw',{asin:this.value})">
+        ${ASIN_ORDER.map(a=>`<option value="${a}" ${a===sel?'selected':''}>${BRAND_SHORT[a]}</option>`).join('')}
+      </select>
+    </div>
+    <div class="mb-3 flex gap-2" id="ak-chips"></div>
+    <table class="w-full"><thead><tr><th>关键词</th><th>中文名</th><th>搜索量</th><th>自然位</th><th>广告位</th><th>数据源</th></tr></thead>
+    <tbody id="ak-tb"></tbody></table>
+  </div>`;
+  const k=D.per_asin[sel]||{};
+  document.getElementById('ak-chips').innerHTML=
+    `<span class="pill pill-blue">自然词 ${k.org||0}</span><span class="pill pill-ok">Top10 ${k.t10||0}</span><span class="pill pill-p2">Top20 ${k.t20||0}</span><span class="pill pill-gray">Top50 ${k.t50||0}</span><span class="pill pill-p1">广告词 ${k.ad||0}</span>`;
+  const rows=D.pool.filter(p=>p.per[sel]).sort((a,b)=>(a.per[sel].p||999)-(b.per[sel].p||999));
+  document.getElementById('ak-tb').innerHTML=rows.map(p=>`<tr>
+    <td class="font-semibold">${esc(p.w)}</td><td class="text-slate-500">${esc(p.cn||'--')}</td>
+    <td class="font-mono">${fmtVol(p.vol)}</td>
+    <td>${fmtRank(p.per[sel].p)}</td>
+    <td>${p.per[sel].ad?'<span class="pill pill-blue">AD #'+p.per[sel].ad+'</span>':'<span class="text-slate-300">—</span>'}</td>
+    <td><span class="src-tag">sorftime_cli</span></td></tr>`).join('')
+  ||'<tr><td colspan="6" class="text-center py-6 text-slate-400">该 ASIN 无共享流量词记录</td></tr>';
+}};
+
+/* ---------- Keyword Gap ---------- */
+PAGES.gap={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">Keyword Gap</div>
+    <div class="text-[12px] text-slate-500 mb-3">在直接竞争词（≥2 竞品有自然位）中，找出监控对象尚未进入自然排名的词 · 月搜索量 ≥1K · 展示 Top ${D.gaps.length}</div>
+    <table class="w-full"><thead><tr><th>关键词</th><th>搜索量</th><th>覆盖竞品</th><th>最佳排名</th><th>缺失（Gap）</th></tr></thead>
+    <tbody>${D.gaps.map(x=>`<tr>
+      <td class="font-semibold text-slate-800">${esc(x.w)}</td>
+      <td class="font-mono">${fmtVol(x.vol)}</td><td>${x.cc} 个</td><td>${fmtRank(x.best)}</td>
+      <td>${x.missing.map(m=>`<span class="pill pill-p1 mr-1">${esc(m.name)}</span>`).join('')}</td></tr>`).join('')}</tbody></table>
+  </div>`;
+}};
+
+/* ---------- 关键词预警 ---------- */
+PAGES.kwalert={render(el){
+  const rows=[];
+  const adMap=Object.entries(D.per_asin).map(([asin,k])=>({asin,name:BRAND_SHORT[asin],ad:k.ad||0}));
+  const noAd=adMap.filter(x=>x.ad===0);
+  const heavy=adMap.filter(x=>x.ad>0);
+  rows.push(alertRow('P2','广告投放分野：品牌自然流量 vs 买词抢量',
+    `${heavy.length?heavy.map(x=>x.name+'('+x.ad+'词)').join('、')+' 在竞争词池内铺广告位':'池内暂无广告投放记录'}；${noAd.length?noAd.map(x=>x.name).join('、')+' 零广告记录（全自然流量）':''} → 自然流量型需内容+评论防守，买词型需盯其投放词。`,
+    'sorftime_cli(ASINRequestKeyword).AdPosition'));
+  [...D.pool].sort((a,b)=>b.vol-a.vol).slice(0,5).forEach(w=>{
+    const miss=ASIN_ORDER.filter(a=>!w.per[a]||!w.per[a].p);
+    if(miss.length) rows.push(alertRow('P2','高流量词未被全竞品覆盖',
+      `“${w.w}” 月搜 ${fmtVol(w.vol)}，${miss.map(m=>BRAND_SHORT[m]).join('、')} 无自然位 → 若为目标词，是明确的关键词缺口。`,
+      `${w.w} · ${w.cc} 竞品覆盖`));
+  });
+  D.changes.filter(x=>x.date===D0).forEach(x=>rows.push(alertRow(x.lvl==='P1'?'P1':'P2','竞品价格变动',
+    `${BRAND_SHORT[x.asin]} ${usd(x.before)} → ${usd(x.after)}（${x.date}），请人工判断是否跟随调价。`,`${x.asin} ProductTrend`)));
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">关键词预警</div>
+    <div class="text-[12px] text-slate-500 mb-4">基于关键词排名快照与广告位记录自动生成 · Evidence-first</div>
+    <div class="space-y-3">${rows.length?rows.join(''):'<div class="text-slate-400 py-8 text-center">当前无预警信号</div>'}</div>
+  </div>`;
+}};
+function alertRow(lvl,title,reason,ev){
+  return `<div class="rounded-lg border p-3 ${lvl==='P1'?'border-red-100 bg-red-50/40':'border-amber-100 bg-amber-50/40'}">
+    <div class="flex items-center gap-2 mb-1"><span class="pill ${lvl==='P1'?'pill-p1':'pill-p2'}">${lvl}</span><span class="text-[13px] font-bold text-slate-800">${esc(title)}</span></div>
+    <div class="text-[12px] text-slate-600 mb-1">${esc(reason)}</div>
+    <div class="text-[10.5px] src-tag">证据：${esc(ev)}</div></div>`;
+}
+
+/* ---------- Listing 对比 ---------- */
+PAGES['listing-cmp']={render(el){
+  const mkRow=(label,fn,wrap)=>`<tr><td class="bg-slate-50 font-bold text-slate-700 whitespace-nowrap w-24">${label}</td>${ASIN_ORDER.map(a=>{const o=ASIN_META[a];return `<td class="${wrap?'':'whitespace-nowrap'} text-[11.5px]">${fn(o)}</td>`;}).join('')}</tr>`;
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">Listing 对比</div>
+    <div class="text-[12px] text-slate-500 mb-3">监控池 ${N_ASIN} 个 ASIN（自有 ${MAIN_ASIN} 首列置顶）· 缺失字段明确显示 N/A。</div>
+    <div class="overflow-x-auto"><table class="w-full min-w-[980px]">
+      <thead><tr><th class="w-24">字段</th>${ASIN_ORDER.map(a=>`<th><span class="font-mono text-[10px]">${a}</span><div class="text-[11px] text-slate-500 font-normal">${BRAND_SHORT[a]}</div></th>`).join('')}</tr></thead>
+      <tbody>
+        ${mkRow('品牌',o=>esc(o.brand))}
+        ${mkRow('价格',o=>usd(o.price))}
+        ${mkRow('类目排名',o=>'#'+(o.rank??'N/A'))}
+        ${mkRow('评分',o=>(o.rating??'N/A')+' ★')}
+        ${mkRow('Review',o=>fmtVol(o.reviews))}
+        ${mkRow('Buybox',o=>esc((o.buybox||'N/A').slice(0,18)))}
+        ${mkRow('FBA',o=>o.fba?'是':'否')}
+        ${mkRow('Title',o=>esc((o.title||'N/A').slice(0,150)),true)}
+      </tbody></table></div>
+  </div>`;
+}};
+
+/* ---------- Listing 优化建议 ---------- */
+PAGES.suggest={render(el){
+  const st=sugState();
+  const items=D.suggestions;
+  const pending=items.filter((_,i)=>(st['s'+i]||'pending')==='pending').length;
+  el.innerHTML=`
+  <div class="flex items-center justify-between mb-3">
+    <div><div class="text-[15px] font-bold text-slate-900">Listing 优化建议</div>
+    <div class="text-[12px] text-slate-500">所有建议都带关键词、竞品或历史证据，采纳后只创建版本记录，不会自动修改 Amazon。</div></div>
+    <button class="btn btn-primary btn-sm" onclick="toast('本周建议已生成（基于 ${B0} 关键词快照）')">✨ 生成本周建议</button>
+  </div>
+  <div class="flex items-center gap-2 mb-3 text-[12px] text-slate-600">
+    <span class="pill pill-blue">建议队列 ${pending} 条待处理</span>
+    <span class="text-slate-400">共 ${items.length} 条候选 · 证据来自关键词排名矩阵</span>
+  </div>
+  <div class="space-y-3" id="sug-list"></div>`;
+  const sl=document.getElementById('sug-list');
+  items.forEach((s,i)=>{
+    const sti=st['s'+i]||'pending';
+    const aobj=ASIN_META[s.asin];
+    const badgeTxt=sti==='adopted'?'已采纳':sti==='ignored'?'已忽略':sti==='watch'?'观察中':'待处理';
+    const badgeCls=sti==='adopted'?'pill-ok':sti==='ignored'?'pill-gray':sti==='watch'?'pill-blue':'pill-p2';
+    sl.insertAdjacentHTML('beforeend',`<div class="card p-4 ${sti==='adopted'?'opacity-60':''}">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-[13.5px] font-bold text-slate-800">${esc(s.label)}</span>
+        <span class="pill ${s.lvl==='P1'?'pill-p1':'pill-p2'}">${s.lvl}</span>
+        <span class="text-[11px] text-slate-400 font-normal">· ${esc(BRAND_SHORT[s.asin])}</span>
+        <span class="pill ${badgeCls} ml-auto">${badgeTxt}</span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 text-[11.5px]">
+        <div><div class="text-slate-400 mb-0.5">当前</div><div class="text-slate-600 break-all">${esc((aobj?.title||'N/A').slice(0,150))}</div></div>
+        <div><div class="text-slate-400 mb-0.5">原因</div><div class="text-slate-600">${esc(s.reason)}</div></div>
+        <div><div class="text-slate-400 mb-0.5">证据</div><div class="text-slate-600 src-tag">${esc(s.evidence)}</div></div>
+      </div>
+      <div class="flex gap-2 mt-3 ${sti!=='pending'?'pointer-events-none opacity-40':''}">
+        <button class="btn btn-primary btn-sm" onclick="setSug(${i},'adopted')">✓ 采纳建议</button>
+        <button class="btn btn-sm" onclick="setSug(${i},'watch')">👁 继续观察</button>
+        <button class="btn btn-sm" onclick="setSug(${i},'ignored')">✕ 忽略</button>
+      </div>
+    </div>`);
+  });
+  if(!items.length) sl.innerHTML='<div class="card p-10 text-center text-slate-400">暂无建议：评论 / Listing 字段层接入后自动生成</div>';
+}};
+
+/* ---------- Listing 版本记录 ---------- */
+PAGES.version={render(el){
+  const st=sugState();
+  const adopted=Object.entries(st).filter(([k,v])=>v==='adopted');
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">Listing 版本记录</div>
+    <div class="text-[12px] text-slate-500 mb-4">采纳建议只创建版本记录，不会自动修改 Amazon。当前为基线快照；采纳建议后在此生成版本 diff。</div>
+    <div class="space-y-2">
+      <div class="rounded-lg border border-slate-200 p-3 flex items-center gap-3">
+        <span class="text-[16px]">📄</span>
+        <div><div class="text-[13px] font-semibold">v1 · 基线快照（${B0}）</div>
+        <div class="text-[10px] src-tag">Title / 价格 / BSR 原始字段 · sorftime_cli(ProductRequest) · ${N_ASIN} ASIN</div></div>
+        <span class="pill pill-ok ml-auto">当前版本</span>
+      </div>
+      ${adopted.map(([k])=>{const idx=+k.replace('s','');const s=D.suggestions[idx];return `<div class="rounded-lg border border-indigo-100 bg-indigo-50/40 p-3 flex items-center gap-3">
+        <span class="text-[16px]">📝</span>
+        <div><div class="text-[13px] font-semibold">版本 v2 · ${esc(s?s.label.split('|')[0]:'优化建议')}</div>
+        <div class="text-[10px] src-tag">${esc(s?s.evidence:'')}</div></div>
+        <span class="pill pill-ok ml-auto">已采纳</span></div>`;}).join('')}
+      ${!adopted.length?'<div class="text-slate-400 py-4 text-[12px]">尚未采纳任何建议 → 在「Listing 优化建议」页处理候选队列。</div>':''}
+    </div>
+  </div>`;
+}};
+
+/* ---------- 竞争信号 ---------- */
+PAGES.signal={render(el){
+  el.innerHTML=`<div class="card p-4">
+    <div class="text-[15px] font-bold text-slate-900 mb-1">竞争信号</div>
+    <div class="text-[12px] text-slate-500 mb-4">跨竞品信号流 · Evidence-first（事实证据与建议分开显示）</div>
+    <div class="space-y-3">${D.signals.map(s=>`<div class="rounded-lg border p-3.5 ${s.lvl==='P1'?'border-red-100 bg-red-50/40':'border-amber-100 bg-amber-50/40'}">
+      <div class="flex items-center gap-2 mb-1"><span class="pill ${s.lvl==='P1'?'pill-p1':'pill-p2'}">${s.lvl}</span><span class="text-[13.5px] font-bold text-slate-800">${esc(s.title)}</span></div>
+      <div class="text-[12.5px] text-slate-600 mb-1.5">${esc(s.reason)}</div>
+      <div class="text-[10.5px] src-tag">证据：${esc(s.evidence)}</div></div>`).join('')}</div>
+  </div>`;
+}};
+
+/* ---------- 自动化 ---------- */
+PAGES.auto={render(el){
+  const enabled=D.schedule.filter(x=>x.status==='enabled').length;
+  el.innerHTML=`
+  <div class="flex items-center justify-between mb-3">
+    <div><div class="text-[15px] font-bold text-slate-900">自动化 · 定时任务</div>
+    <div class="text-[12px] text-slate-500">浏览器关闭后由后台 Worker 按项目时区执行。</div></div>
+    <button class="btn btn-primary btn-sm" onclick="runNow()">⚡ 立即运行快照</button>
+  </div>
+  <div class="card p-4">
+    <div class="flex items-center gap-3 mb-3 text-[12.5px]">
+      <span class="font-bold text-slate-700">任务计划</span><span class="text-slate-400">·</span><span class="text-slate-500">后台 Worker</span>
+      <span class="ml-auto text-slate-500">${enabled} 项启用 · 其余待数据层接入后启用</span>
+    </div>
+    <table class="w-full"><thead><tr><th>任务</th><th>频率</th><th>用途</th><th>状态</th></tr></thead>
+    <tbody>${D.schedule.map(x=>`<tr>
+      <td><span class="font-mono text-[11.5px] font-semibold text-indigo-600">${x.task}</span></td>
+      <td class="whitespace-nowrap">${x.freq}</td><td>${x.use}</td>
+      <td>${x.status==='enabled'?'<span class="pill pill-ok">enabled</span>':'<span class="pill pill-gray">待启用</span>'}</td></tr>`).join('')}</tbody></table>
+    <div class="text-[10.5px] src-tag mt-2">执行引擎：Sorftime CLI（sorftime api ProductRequest / ASINRequestKeyword）· 每轮约 ${N_ASIN*2} Request · 当前 RequestLeft ${RL}</div>
+  </div>`;
+}};
+function runNow(){ toast('已触发 competitor_snapshot：ProductRequest × '+N_ASIN+' + ASINRequestKeyword × '+N_ASIN+' = '+(N_ASIN*2)+' Request'); setTimeout(()=>toast('快照完成 → '+D.meta.baseline+'.detail.json（基线已存在，将写入 diff）'),1600); }
+
+/* ============ 工具函数 ============ */
+function stat(l,v,s){return `<div class="card p-3.5"><div class="stat-label">${l}</div><div class="stat-val my-0.5">${v}</div><div class="stat-sub">${s}</div></div>`;}
+function mini(l,v){return `<div class="rounded-lg bg-slate-50 p-2"><div class="stat-label mb-0.5">${l}</div><div class="text-[16px] font-bold text-slate-800">${v}</div></div>`;}
+function kwStat(l,v){return `<div class="rounded-lg bg-slate-50 py-2"><div class="text-[17px] font-extrabold text-indigo-600">${v??0}</div><div class="text-[10px] text-slate-500">${l}</div></div>`;}
+
+/* ============ 导航 & 路由 ============ */
+const NAV_GROUPS=[
+  ['工作台',[['dashboard','首页 Dashboard'],['myasin','我的产品'],['detail','产品详情']]],
+  ['竞品',[['discovery','竞品发现'],['pool','竞品池'],['data','竞品数据'],['snapshot','竞品历史快照'],['changes','竞品变动监控']]],
+  ['关键词',[['kwlib','关键词词库'],['kwrank','关键词排行'],['asinkw','ASIN关键词排行'],['gap','Keyword Gap'],['kwalert','关键词预警']]],
+  ['Listing 优化',[['listing-cmp','Listing 对比'],['suggest','Listing优化建议'],['version','Listing版本记录']]],
+  ['市场信号',[['signal','竞争信号']]],
+  ['系统',[['auto','自动化 · 定时任务']]],
+];
+function buildNav(){
+  const sb=document.getElementById('sidebar'); sb.innerHTML='';
+  NAV_GROUPS.forEach(([g,items])=>{
+    const gl=document.createElement('div'); gl.className='nav-group-label'; gl.textContent=g; sb.appendChild(gl);
+    items.forEach(([id,label])=>{
+      const b=document.createElement('button'); b.className='nav-item'; b.dataset.page=id;
+      b.innerHTML='<span>'+label+'</span>';
+      if(id==='suggest'){ const n=D.suggestions.length; if(n) b.innerHTML+=`<span class="ml-auto badge-count">${n}</span>`; }
+      b.onclick=()=>goto(id);
+      sb.appendChild(b);
+    });
+  });
+}
+function goto(id,params){
+  current=id; currentParams=params||null;
+  if(history.replaceState) history.replaceState(null,'','#page='+id);
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.toggle('active',x.dataset.page===id));
+  renderPage();
+}
+function renderPage(){
+  destroyAll();
+  const root=document.getElementById('page-root');
+  const pg=PAGES[current];
+  root.innerHTML='';
+  const wrap=document.createElement('div'); wrap.className='page active'; root.appendChild(wrap);
+  pg.render(wrap,currentParams);
+  // mount charts: pg.charts keyed by chart name; canvas id may be 'ch-<name>'
+  if(pg.charts){
+    wrap.querySelectorAll('canvas[id]').forEach(cv=>{
+      const fn=pg.charts[cv.id]||pg.charts[cv.id.replace(/^ch-/,'')];
+      if(fn){ try{ fn(cv); }catch(e){ console.error('chart mount '+cv.id, e); } }
+    });
+  }
+}
+/* fix detail charts keyed by canvas ids */
+PAGES.detail.charts={score(c){mountScore(c)},p7(c){mountP7(c)}};
+function mountScore(c){
+  const info=c.closest('.page')._charts; if(!info)return;
+  destroyChart('score');
+  charts['score']=new Chart(c,{type:'bar',data:{labels:info.partLabels,datasets:[{data:info.parts,backgroundColor:['#6366f1','#8b5cf6','#a855f7','#0ea5e9','#14b8a6','#f59e0b','#f43f5e'].map(x=>hexA(x,0.8)),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{max:30,ticks:{font:{size:9}}},y:{ticks:{font:{size:9.5}}}}}});
+}
+function mountP7(c){
+  const info=c.closest('.page')._charts; if(!info)return;
+  destroyChart('p7');
+  const a=info.a;
+  const ms=[...new Set((a.price7||[]).map(p=>p.d))].sort().slice(-12);
+  const vals=ms.map(m=>{const f=a.price7.find(p=>p.d===m); return f?f.v:null;});
+  charts['p7']=new Chart(c,{type:'line',data:{labels:ms,datasets:[{label:a.asin,data:vals,borderColor:'#6366f1',backgroundColor:hexA('#6366f1',0.13),fill:true,spanGaps:true,tension:.25,pointRadius:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:10},callback:v=>'$'+v}},x:{ticks:{font:{size:10}}}}}});
+}
+
+/* ============ init ============ */
+(function(){
+  document.getElementById('hd-project').textContent=D.meta.project;
+  document.getElementById('hd-site').textContent=D.meta.site;
+  document.getElementById('hd-status').textContent=D.meta.status;
+  document.getElementById('hd-cand').textContent='0';
+  document.getElementById('hd-cap').textContent='captured_at '+D.meta.captured_at+' · sorftime_cli · RequestLeft '+RL+' · '+D.meta.project;
+  const m=location.hash.match(/page=(\w+)/);
+  if(m&&PAGES[m[1]]) current=m[1];
+  buildNav();
+  renderPage();
+})();
+</script>
+</body>
+</html>

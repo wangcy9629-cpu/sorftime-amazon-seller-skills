@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorftime 亚马逊运营工作台 · amz-oneclick</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #f5f6f8; color: #1f2329;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 14px; line-height: 1.6;
+  }
+  a { color: #1d4ed8; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 22px 60px; }
+
+  /* 顶栏 */
+  .top {
+    background: linear-gradient(135deg, #1d4ed8 0%, #0f766e 100%);
+    border-radius: 14px; padding: 20px 24px; color: #fff;
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;
+  }
+  .top h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: .3px; }
+  .top .sub { font-size: 12.5px; opacity: .85; margin-top: 3px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+    border-radius: 20px; padding: 5px 13px; font-size: 12.5px; white-space: nowrap;
+  }
+  .pill b { font-weight: 700; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:1px; }
+  .dot.ok { background:#4ade80; box-shadow:0 0 0 3px rgba(74,222,128,.25); }
+  .dot.bad { background:#f87171; box-shadow:0 0 0 3px rgba(248,113,113,.25); }
+
+  /* 布局 */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:18px 20px; }
+  .card h2 { margin:0 0 4px; font-size:15px; font-weight:700; }
+  .card .hint { font-size:12.5px; color:#8a9099; margin-bottom:14px; }
+
+  /* 任务选择 */
+  .sec-title { font-size:12px; font-weight:700; color:#6b7280; letter-spacing:1px; margin:14px 0 8px; text-transform:uppercase; }
+  .sec-title:first-of-type { margin-top:0; }
+  .pipe { display:grid; gap:8px; }
+  .pipe-item {
+    border:1.5px solid #e5e7eb; border-radius:10px; padding:11px 13px; cursor:pointer;
+    transition:.15s; background:#fff;
+  }
+  .pipe-item:hover { border-color:#bfdbfe; background:#f8fbff; }
+  .pipe-item.on { border-color:#1d4ed8; background:#eff6ff; box-shadow:0 0 0 2px rgba(29,78,216,.1); }
+  .pipe-item .r1 { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .pipe-item .nm { font-weight:700; font-size:13.5px; }
+  .pipe-item .cost { font-size:11.5px; color:#9ca3af; white-space:nowrap; }
+  .pipe-item .ch { font-size:12.5px; color:#5b6270; margin-top:3px; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip {
+    border:1.5px solid #e5e7eb; background:#fff; border-radius:20px; padding:6px 13px;
+    cursor:pointer; font-size:13px; transition:.15s;
+  }
+  .chip:hover { border-color:#bfdbfe; background:#f8fbff; }
+  .chip.on { border-color:#1d4ed8; background:#1d4ed8; color:#fff; font-weight:600; }
+
+  /* 表单 */
+  label.f { display:block; font-size:12.5px; color:#4b5563; font-weight:600; margin:11px 0 5px; }
+  input[type=text], textarea, select {
+    width:100%; border:1px solid #d8dbe0; border-radius:8px; padding:8px 11px;
+    font-size:13.5px; font-family:inherit; color:#1f2329; background:#fff;
+  }
+  input[type=text]:focus, textarea:focus, select:focus {
+    outline:none; border-color:#1d4ed8; box-shadow:0 0 0 3px rgba(29,78,216,.1);
+  }
+  textarea { resize:vertical; min-height:64px; }
+  .req::after { content:" *"; color:#dc2626; }
+
+  /* 指令预览 */
+  .instr {
+    background:#f8fafc; border:1px dashed #cbd5e1; border-radius:9px; padding:11px 13px;
+    font-size:13.5px; color:#0f172a; min-height:46px; white-space:pre-wrap; word-break:break-word;
+  }
+  .btns { display:flex; flex-wrap:wrap; gap:9px; margin-top:13px; }
+  button {
+    border:none; border-radius:8px; padding:9px 17px; font-size:13.5px; font-weight:600;
+    cursor:pointer; font-family:inherit; transition:.15s;
+  }
+  .b1 { background:#1d4ed8; color:#fff; }
+  .b1:hover { background:#1e40af; }
+  .b2 { background:#fff; color:#374151; border:1px solid #d8dbe0; }
+  .b2:hover { background:#f3f4f6; }
+  .b3 { background:#0f766e; color:#fff; }
+  .b3:hover { background:#115e59; }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+
+  /* 队列 & 记录 */
+  .row {
+    border:1px solid #eef0f3; border-radius:9px; padding:10px 12px; margin-bottom:8px;
+    display:flex; gap:12px; justify-content:space-between; align-items:flex-start;
+  }
+  .row:hover { background:#fafbfc; }
+  .row .t { font-size:13px; color:#1f2329; word-break:break-word; }
+  .row .m { font-size:11.5px; color:#9ca3af; margin-top:3px; }
+  .tag { font-size:11px; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+  .tag.pending { background:#fef3c7; color:#b45309; }
+  .tag.done { background:#ecfdf5; color:#047857; }
+  .tag.info { background:#eff6ff; color:#1d4ed8; }
+  .empty { color:#9ca3af; font-size:13px; padding:8px 0; }
+  .full { grid-column: 1 / -1; }
+  code { background:#f3f4f6; padding:1.5px 6px; border-radius:4px; font-size:12.5px; }
+  .note {
+    background:#fff7ed; border:1px solid #fed7aa; color:#9a3412;
+    border-radius:9px; padding:10px 13px; font-size:12.5px; margin-top:14px;
+  }
+  table.sk { width:100%; border-collapse:collapse; font-size:13px; }
+  table.sk td { padding:7px 8px; border-bottom:1px solid #f2f3f5; vertical-align:top; }
+  table.sk tr:last-child td { border-bottom:none; }
+  table.sk .nm { font-weight:600; white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <h1>Sorftime 亚马逊运营工作台</h1>
+      <div class="sub">amz-oneclick · 一个入口调度全部亚马逊 skill</div>
+    </div>
+    <div class="pills" id="pills">
+      <span class="pill"><span class="dot bad"></span>通道检测中…</span>
+      <span class="pill">子 skill …</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 左：选任务 -->
+    <div class="card">
+      <h2>① 选任务</h2>
+      <div class="hint">流水线 = 一条命令跑一串；单环节 = 只跑一个 skill。</div>
+
+      <div class="sec-title">预设流水线</div>
+      <div class="pipe" id="pipeList"></div>
+
+      <div class="sec-title">单环节</div>
+      <div class="chips" id="chipList"></div>
+    </div>
+
+    <!-- 右：参数 + 指令 -->
+    <div class="card">
+      <h2>② 填参数 → 生成指令</h2>
+      <div class="hint">带 * 为当前任务必填。默认站点 Amazon US（1688 环节自动走 domain=601）。</div>
+      <div id="fields"></div>
+
+      <label class="f">指令预览</label>
+      <div class="instr" id="instr">← 先在左侧选一个任务</div>
+
+      <div class="btns">
+        <button class="b1" id="btnDispatch">派发到待办队列</button>
+        <button class="b3" id="btnCopy">复制指令</button>
+        <button class="b2" id="btnAsk">在对话里问我</button>
+      </div>
+      <div class="note" id="costNote">预估消耗：—</div>
+    </div>
+
+    <!-- 待办队列 -->
+    <div class="card">
+      <h2>待办队列 <span class="tag info" id="qCount">0</span></h2>
+      <div class="hint">派发后回到对话框跟我说「执行待办」，我就按队列顺序跑。也可在对话里直接粘贴上面的指令。</div>
+      <div id="queueBox"><div class="empty">暂无待办</div></div>
+      <div class="btns">
+        <button class="b2" id="btnClear">清空队列</button>
+        <button class="b2" id="btnRefresh">刷新</button>
+      </div>
+    </div>
+
+    <!-- 历史 -->
+    <div class="card">
+      <h2>历史跑批</h2>
+      <div class="hint">读取 <code id="runsRoot">_work/amz-oneclick/</code> 下的记录，点击打开报告。</div>
+      <div id="runsBox"><div class="empty">暂无记录</div></div>
+    </div>
+
+    <!-- 技能矩阵 -->
+    <div class="card full">
+      <h2>技能矩阵（12 个）</h2>
+      <div class="hint">核心 5 个是常用环节，扩展 7 个补齐全链路。</div>
+      <table class="sk" id="skillTable"></table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ---------- 任务目录 ----------
+const SITE = ["US","UK","DE","FR","IT","ES","JP","CA","AU","MX","IN","SE"];
+
+const TASKS = [
+  // 流水线
+  { id:"P1", kind:"pipe", name:"P1 类目可行性", chain:"市场分析 → 找货源 → 算利润", cost:"~60-95 请求",
+    needs:["category","site","note"],
+    tpl: p => `一键跑类目可行性：${p.category}（站点 ${p.site}）${p.note?"。补充："+p.note:""}` },
+  { id:"P2", kind:"pipe", name:"P2 竞品击破", chain:"多 ASIN VOC → 广告规划（+Listing）", cost:"VOC 5-15 Credits + ~10 请求",
+    needs:["category","asins","site","note"],
+    tpl: p => `一键击破这批竞品：品类 ${p.category}，竞品 ASIN：${p.asins}（站点 ${p.site}）${p.note?"。补充："+p.note:""}` },
+  { id:"P3", kind:"pipe", name:"P3 新品启动", chain:"市场分析 → 找货源 → 广告规划", cost:"~70-110 请求",
+    needs:["category","site","note"],
+    tpl: p => `一键新品启动：${p.category}（站点 ${p.site}）${p.note?"。补充："+p.note:""}` },
+  { id:"P4", kind:"pipe", name:"P4 守盘巡检", chain:"店铺六维健康度（日/周/月）", cost:"按任务计（Credits 注意周成本）",
+    needs:["ownAsins","node","site","note"],
+    tpl: p => `一键守盘：自有核心 ASIN ${p.ownAsins}，类目 nodeId ${p.node}（站点 ${p.site}）${p.note?"。补充："+p.note:""}` },
+  { id:"P5", kind:"pipe", name:"P5 全链路", chain:"P1 + P2 + P4", cost:"最大（会二次确认）",
+    needs:["category","asins","ownAsins","node","site","note"],
+    tpl: p => `一键全流程：${p.category}，竞品 ASIN：${p.asins||"（待补）"}，自有 ASIN：${p.ownAsins||"（待补）"}，nodeId ${p.node||"（待补）"}（站点 ${p.site}）${p.note?"。补充："+p.note:""}` },
+
+  // 单环节
+  { id:"S-market", kind:"single", name:"市场", skill:"amz-market-analysis", cost:"~53 积分", needs:["category","site"],
+    tpl: p => `一键市场：${p.category}（站点 ${p.site}）` },
+  { id:"S-supply", kind:"single", name:"找货", skill:"amz-supply-chain", cost:"~5-10 请求", needs:["category","asin","site"],
+    tpl: p => `一键找货：${p.category||p.asin}（目标 ASIN ${p.asin||"—"}，站点 ${p.site}）` },
+  { id:"S-voc-multi", kind:"single", name:"VOC", skill:"multi-asin-voc-analysis", cost:"5-15 Credits", needs:["category","asins","site"],
+    tpl: p => `一键VOC：品类 ${p.category}，竞品 ASIN：${p.asins}（站点 ${p.site}）` },
+  { id:"S-ad", kind:"single", name:"广告", skill:"amz-ad-planning", cost:"~10 请求", needs:["asin","category","site"],
+    tpl: p => `一键广告：目标 ASIN ${p.asin||"—"}${p.category?"，品类 "+p.category:""}（站点 ${p.site}）` },
+  { id:"S-health", kind:"single", name:"守盘", skill:"sorftime-shop-health-monitor", cost:"按任务计", needs:["ownAsins","node","site"],
+    tpl: p => `一键守盘：自有核心 ASIN ${p.ownAsins}，类目 nodeId ${p.node}（站点 ${p.site}）` },
+  { id:"S-selection", kind:"single", name:"选品", skill:"amz-selection", cost:"~15-30 请求", needs:["category","site"],
+    tpl: p => `一键选品：${p.category}（站点 ${p.site}）` },
+  { id:"S-profit", kind:"single", name:"算利润", skill:"amz-profit-calc", cost:"2-3 请求", needs:["asin","site"],
+    tpl: p => `一键算利润：ASIN ${p.asin}（站点 ${p.site}）` },
+  { id:"S-keywords", kind:"single", name:"词库", skill:"amz-cpc-keywords", cost:"~50-100 请求", needs:["category","asin","site"],
+    tpl: p => `一键词库：${p.category||p.asin}（站点 ${p.site}）` },
+  { id:"S-listing", kind:"single", name:"Listing", skill:"amz-listing-creator", cost:"~10-20 请求", needs:["asin","category","site"],
+    tpl: p => `一键Listing：目标 ASIN ${p.asin||"—"}${p.category?"，品类 "+p.category:""}（站点 ${p.site}）` },
+  { id:"S-image", kind:"single", name:"做图", skill:"amz-image-creator", cost:"2-3 请求 + 生图额度", needs:["asin","category"],
+    tpl: p => `一键做图：ASIN ${p.asin||"—"}${p.category?"，品类 "+p.category:""}` },
+  { id:"S-voc-one", kind:"single", name:"单ASIN评论", skill:"amz-voc-analysis", cost:"5-15 Credits", needs:["asin","site"],
+    tpl: p => `一键单ASIN评论：ASIN ${p.asin}（站点 ${p.site}）` },
+  { id:"S-monitor", kind:"single", name:"盯盘", skill:"amz-competitor-monitor", cost:"按任务计", needs:["asin","site"],
+    tpl: p => `一键盯盘：目标 ASIN ${p.asin}（站点 ${p.site}）` },
+];
+
+const FIELDS = {
+  category: { label:"品类名 / 产品名", ph:"如 slow feeder bowl", type:"text" },
+  asins:    { label:"竞品 ASIN 清单", ph:"8-12 个，逗号或空格分隔", type:"textarea" },
+  asin:     { label:"目标 ASIN", ph:"如 B0CVM8TXHP", type:"text" },
+  ownAsins: { label:"自有核心 ASIN", ph:"逗号分隔，如 B08XXXXXXX,B08YYYYYYY", type:"textarea" },
+  node:     { label:"类目 nodeId", ph:"如 17602455011", type:"text" },
+  site:     { label:"站点", type:"select" },
+  note:     { label:"补充要求（可选）", ph:"如：只看 FBA、预算 $2k/月…", type:"text" },
+};
+
+let current = null;
+const params = {};
+
+// ---------- 渲染 ----------
+function renderTasks() {
+  document.getElementById("pipeList").innerHTML = TASKS.filter(t=>t.kind==="pipe").map(t=>`
+    <div class="pipe-item" data-id="${t.id}">
+      <div class="r1"><span class="nm">${t.name}</span><span class="cost">${t.cost}</span></div>
+      <div class="ch">${t.chain}</div>
+    </div>`).join("");
+
+  document.getElementById("chipList").innerHTML = TASKS.filter(t=>t.kind==="single").map(t=>`
+    <div class="chip" data-id="${t.id}">${t.name}</div>`).join("");
+
+  document.querySelectorAll("[data-id]").forEach(el => {
+    el.onclick = () => selectTask(el.dataset.id);
+  });
+}
+
+function selectTask(id) {
+  current = TASKS.find(t => t.id === id);
+  document.querySelectorAll("[data-id]").forEach(el =>
+    el.classList.toggle("on", el.dataset.id === id));
+  renderFields();
+  updateInstr();
+}
+
+function renderFields() {
+  const box = document.getElementById("fields");
+  if (!current) { box.innerHTML = '<div class="empty">先选任务</div>'; return; }
+  box.innerHTML = current.needs.map(k => {
+    const f = FIELDS[k];
+    const reqCls = (k === "note") ? "f" : "f req";
+    if (f.type === "select") {
+      return `<label class="${reqCls}">${f.label}</label>
+        <select data-k="${k}">${SITE.map(s=>`<option value="${s}"${s==="US"?" selected":""}>Amazon ${s}</option>`).join("")}</select>`;
+    }
+    if (f.type === "textarea") {
+      return `<label class="${reqCls}">${f.label}</label>
+        <textarea data-k="${k}" placeholder="${f.ph}">${params[k]||""}</textarea>`;
+    }
+    return `<label class="${reqCls}">${f.label}</label>
+      <input type="text" data-k="${k}" placeholder="${f.ph}" value="${params[k]||""}">`;
+  }).join("");
+  box.querySelectorAll("[data-k]").forEach(el => {
+    el.oninput = el.onchange = () => { params[el.dataset.k] = el.value; updateInstr(); };
+  });
+}
+
+function updateInstr() {
+  const box = document.getElementById("instr");
+  const note = document.getElementById("costNote");
+  if (!current) { box.textContent = "← 先在左侧选一个任务"; note.textContent = "预估消耗：—"; return; }
+  const p = {}; Object.keys(FIELDS).forEach(k => p[k] = (params[k]||"").trim());
+  p.site = p.site || "US";
+  box.textContent = current.tpl(p);
+  const miss = current.needs.filter(k => k !== "note" && !p[k]);
+  note.innerHTML = miss.length
+    ? `⚠️ 还缺：${miss.map(k=>FIELDS[k].label).join("、")}；预估消耗 ${current.cost}`
+    : `预估消耗：<b>${current.cost}</b>　·　提交后会先体检再执行`;
+}
+
+function curInstruction() {
+  const p = {}; Object.keys(FIELDS).forEach(k => p[k] = (params[k]||"").trim());
+  p.site = p.site || "US";
+  return current ? current.tpl(p) : "";
+}
+
+// ---------- 状态 ----------
+async function loadStatus() {
+  try {
+    const r = await fetch("/api/status"); const d = await r.json();
+    const ch = d.channel.channel;
+    const okN = d.skills.filter(s=>s.ok).length;
+    document.getElementById("pills").innerHTML = `
+      <span class="pill"><span class="dot ${ch?"ok":"bad"}"></span>通道：<b>${ch ? ch.toUpperCase() : "未配置"}</b></span>
+      <span class="pill">子 skill：<b>${okN}/${d.skills.length}</b></span>
+      <span class="pill">工作目录：<b>${d.workdir.split(/[\\/]/).pop()}</b></span>`;
+    const tb = document.getElementById("skillTable");
+    tb.innerHTML = d.skills.map(s => `
+      <tr>
+        <td class="nm"><span class="dot ${s.ok?"ok":"bad"}"></span>${s.name}</td>
+        <td><span class="tag ${s.group==="core"?"info":"done"}">${s.group==="core"?"核心":"扩展"}</span></td>
+        <td style="color:#5b6270">${s.desc || "—"}</td>
+      </tr>`).join("");
+  } catch (e) {
+    document.getElementById("pills").innerHTML = `<span class="pill"><span class="dot bad"></span>服务未响应</span>`;
+  }
+}
+
+async function loadQueue() {
+  try {
+    const r = await fetch("/api/queue"); const d = await r.json();
+    const q = d.queue || [];
+    document.getElementById("qCount").textContent = q.length;
+    document.getElementById("queueBox").innerHTML = q.length ? q.map(t => `
+      <div class="row">
+        <div>
+          <div class="t">${t.instruction || "（空指令）"}</div>
+          <div class="m">${t.created} · ${t.pipeline_name || t.pipeline || ""}</div>
+        </div>
+        <span class="tag ${t.status==="done"?"done":"pending"}">${t.status==="done"?"已执行":"待执行"}</span>
+      </div>`).join("") : '<div class="empty">暂无待办</div>';
+  } catch (e) {}
+}
+
+async function loadRuns() {
+  try {
+    const r = await fetch("/api/runs"); const d = await r.json();
+    document.getElementById("runsRoot").textContent = d.root;
+    document.getElementById("runsBox").innerHTML = (d.runs||[]).length ? d.runs.map(x => `
+      <div class="row">
+        <div>
+          <div class="t">${x.report_name
+            ? `<a href="file:///${x.report.replace(/\\\\/g,"/")}" target="_blank">${x.report_name}</a>`
+            : `<b>${x.id}</b>`}</div>
+          <div class="m">${x.mtime} · ${x.steps} 个环节产物 · ${x.files.length} 个文件</div>
+        </div>
+        <span class="tag info">${x.report_name ? "有报告" : "进行中"}</span>
+      </div>`).join("") : '<div class="empty">暂无记录</div>';
+  } catch (e) {}
+}
+
+// ---------- 动作 ----------
+document.getElementById("btnDispatch").onclick = async () => {
+  if (!current) return alert("先选一个任务");
+  const p = {}; Object.keys(FIELDS).forEach(k => p[k] = (params[k]||"").trim());
+  p.site = p.site || "US";
+  const miss = current.needs.filter(k => k !== "note" && !p[k]);
+  if (miss.length) return alert("还缺：" + miss.map(k=>FIELDS[k].label).join("、"));
+  const body = {
+    pipeline: current.id,
+    pipeline_name: current.kind === "pipe" ? current.name : current.skill,
+    params: p,
+    instruction: curInstruction(),
+  };
+  const r = await fetch("/api/queue", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body) });
+  const d = await r.json();
+  if (d.ok) { loadQueue(); alert("已派发到待办队列。回到对话框跟我说「执行待办」即可。"); }
+};
+
+document.getElementById("btnCopy").onclick = () => {
+  const t = curInstruction();
+  if (!t) return;
+  navigator.clipboard.writeText(t).then(()=>alert("已复制：\n\n"+t)).catch(()=>alert(t));
+};
+
+document.getElementById("btnAsk").onclick = () => {
+  const t = curInstruction();
+  if (!t) return;
+  alert("把下面这句直接发到对话框：\n\n" + t);
+};
+
+document.getElementById("btnRefresh").onclick = () => { loadStatus(); loadQueue(); loadRuns(); };
+document.getElementById("btnClear").onclick = async () => {
+  if (!confirm("清空全部待办？")) return;
+  await fetch("/api/queue/clear", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({all:true}) });
+  loadQueue();
+};
+
+// ---------- 启动 ----------
+renderTasks();
+selectTask("P1");
+loadStatus(); loadQueue(); loadRuns();
+setInterval(() => { loadQueue(); loadRuns(); }, 12000);
+</script>
+</body>
+</html>

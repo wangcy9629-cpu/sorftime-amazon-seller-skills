@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorftime 店铺六维监控系统 - 使用说明</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                font-family: 'Noto Sans SC', 'Inter', sans-serif;
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                min-height: 100vh;
+            }
+        }
+        @layer components {
+            .gradient-text {
+                background: linear-gradient(135deg, #f59e0b 0%, #ef4444 50%, #8b5cf6 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .card {
+                background: rgba(30, 41, 59, 0.8);
+                border: 1px solid rgba(99, 102, 241, 0.2);
+                backdrop-filter: blur(10px);
+            }
+            .step-number {
+                background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            }
+            .code-block {
+                background: #0d1117;
+                border: 1px solid #30363d;
+                font-family: 'JetBrains Mono', monospace;
+            }
+            .highlight-box {
+                background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
+                border-left: 4px solid #f59e0b;
+            }
+            .nav-link {
+                transition: all 0.3s ease;
+            }
+            .nav-link:hover {
+                background: rgba(245, 158, 11, 0.1);
+                border-left: 3px solid #f59e0b;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-xl border-b border-orange-500/20">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-orange-500/20">
+                        S
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Sorftime Smart 1</h1>
+                        <p class="text-xs text-slate-400">店铺六维健康度监控系统 v1.0</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs">第06篇配套工具</span>
+                    <a href="#install" class="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all">
+                        立即安装
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 sticky top-20 h-[calc(100vh-80px)] overflow-y-auto py-8 px-4 hidden lg:block">
+            <nav class="space-y-1">
+                <a href="#overview" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-home w-5"></i> 系统概述
+                </a>
+                <a href="#files" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-folder w-5"></i> 交付文件
+                </a>
+                <a href="#install" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-download w-5"></i> 安装步骤
+                </a>
+                <a href="#config" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-cog w-5"></i> 配置参数
+                </a>
+                <a href="#usage" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-play w-5"></i> 使用教程
+                </a>
+                <a href="#sop1" class="nav-link block px-4 py-2 pl-8 rounded-lg text-xs text-slate-400 hover:text-white">
+                    SOP1 每日扫描
+                </a>
+                <a href="#sop2" class="nav-link block px-4 py-2 pl-8 rounded-lg text-xs text-slate-400 hover:text-white">
+                    SOP2 每周报告
+                </a>
+                <a href="#sop3" class="nav-link block px-4 py-2 pl-8 rounded-lg text-xs text-slate-400 hover:text-white">
+                    SOP3 月度诊断
+                </a>
+                <a href="#output" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-file-export w-5"></i> 输出文件
+                </a>
+                <a href="#faq" class="nav-link block px-4 py-2 rounded-lg text-sm text-slate-300 hover:text-white">
+                    <i class="fas fa-question-circle w-5"></i> 常见问题
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 py-8 px-6">
+            <!-- Hero Section -->
+            <section id="overview" class="mb-16">
+                <div class="card rounded-2xl p-8 text-center">
+                    <div class="text-5xl mb-4">🎯</div>
+                    <h2 class="text-3xl font-bold text-white mb-4">
+                        实现 <span class="gradient-text">三级自动化监控</span>
+                    </h2>
+                    <p class="text-slate-400 max-w-2xl mx-auto mb-6">
+                        基于《亚马逊2026增长指南》第06篇方法论，用 Claude Code + Sorftime MCP
+                        实现店铺六维健康度的每日扫描、每周优化、每月诊断全流程自动化
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-400">3</div>
+                            <div class="text-xs text-slate-500">级工作流</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-400">6</div>
+                            <div class="text-xs text-slate-500">维监控</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-400">24h</div>
+                            <div class="text-xs text-slate-500">自动巡检</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deliverables -->
+            <section id="files" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-folder-open text-orange-500"></i>
+                    交付文件清单
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="card rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400">
+                            <i class="fas fa-file-code"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white">店铺六维监控自动化-SKILL.md</h3>
+                            <p class="text-sm text-slate-400 mt-1">Claude Code Skill 文件，包含完整的监控逻辑和诊断规则</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-blue-500/20 text-blue-300 text-xs rounded">核心文件</span>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white">一键启动-店铺六维监控.bat</h3>
+                            <p class="text-sm text-slate-400 mt-1">Windows 一键启动脚本，自动安装 Skill 并启动 Claude Code</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-green-500/20 text-green-300 text-xs rounded">启动器</span>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white">article-06-shop-building.md</h3>
+                            <p class="text-sm text-slate-400 mt-1">第06篇完整文章，包含理论基础、数据分析和案例研究</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-purple-500/20 text-purple-300 text-xs rounded">参考文档</span>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-5 flex items-start gap-4">
+                        <div class="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center text-orange-400">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white">report-article-06-shop-building.html</h3>
+                            <p class="text-sm text-slate-400 mt-1">可视化 HTML 报告示例，包含交互式图表和数据面板</p>
+                            <span class="inline-block mt-2 px-2 py-0.5 bg-orange-500/20 text-orange-300 text-xs rounded">示例报告</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section id="install" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-download text-orange-500"></i>
+                    安装步骤
+                </h2>
+
+                <div class="space-y-6">
+                    <!-- Step 1 -->
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">1</div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-white mb-2">安装 Claude Code</h3>
+                                <p class="text-sm text-slate-400 mb-3">确保已在系统中安装 Claude Code CLI 工具</p>
+                                <div class="code-block rounded-lg p-3 text-sm">
+                                    <div class="text-slate-500"># 验证安装</div>
+                                    <div class="text-green-400">claude --version</div>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-2">
+                                    <i class="fas fa-external-link-alt mr-1"></i>
+                                    未安装？访问 <a href="https://claude.ai/download" class="text-orange-400 hover:underline">claude.ai/download</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">2</div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-white mb-2">复制 Skill 文件</h3>
+                                <p class="text-sm text-slate-400 mb-3">将 Skill 文件复制到 Claude Code 的 skills 目录</p>
+                                <div class="code-block rounded-lg p-3 text-sm">
+                                    <div class="text-slate-500"># 创建目录（如果不存在）</div>
+                                    <div class="text-green-400">mkdir "%USERPROFILE%\.claude\skills\sorftime-shop-health-monitor"</div>
+                                    <div class="text-slate-500 mt-2"># 复制文件</div>
+                                    <div class="text-green-400">copy "店铺六维监控自动化-SKILL.md" "%USERPROFILE%\.claude\skills\sorftime-shop-health-monitor\SKILL.md"</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">3</div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-white mb-2">配置 Sorftime MCP</h3>
+                                <p class="text-sm text-slate-400 mb-3">确保 Claude Code 已配置 Sorftime MCP 工具</p>
+                                <div class="highlight-box rounded-lg p-4">
+                                    <p class="text-sm text-slate-300">
+                                        <i class="fas fa-info-circle text-orange-400 mr-2"></i>
+                                        MCP 配置需在 Claude Code 设置中完成，请联系 Sorftime 获取配置指引
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="card rounded-xl p-6">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">4</div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-white mb-2">一键启动（可选）</h3>
+                                <p class="text-sm text-slate-400 mb-3">双击运行批处理文件自动完成安装并启动</p>
+                                <div class="code-block rounded-lg p-3 text-sm">
+                                    <div class="text-green-400">双击运行：一键启动-店铺六维监控.bat</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration -->
+            <section id="config" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-cog text-orange-500"></i>
+                    配置参数
+                </h2>
+                <div class="card rounded-xl p-6">
+                    <p class="text-slate-400 mb-4">首次使用时，在 Claude Code 中配置以下参数：</p>
+                    <div class="code-block rounded-lg p-4 text-sm overflow-x-auto">
+                        <pre class="text-slate-300">{
+  "核心ASIN": ["B08XXXXXXX", "B08YYYYYYY"],
+  "主营类目NodeID": "123456789",
+  "品牌关键词": ["YourBrand", "YourBrandName"],
+  "监控站点": "US",
+  "预警阈值": {
+    "自然流量占比": 0.5,
+    "可售天数": 14,
+    "榜单变化率": 0.3,
+    "退货率超标": 0.02
+  }
+}</pre>
+                    </div>
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <h4 class="text-white font-medium mb-2">核心ASIN</h4>
+                            <p class="text-slate-400">需要监控的主力产品ASIN，可配置多个</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-2">类目NodeID</h4>
+                            <p class="text-slate-400">主营类目的亚马逊节点ID，用于竞争分析</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-2">品牌关键词</h4>
+                            <p class="text-slate-400">品牌名称的不同写法，用于监控品牌词搜索</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-2">预警阈值</h4>
+                            <p class="text-slate-400">触发不同级别预警的临界值</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Usage -->
+            <section id="usage" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-play text-orange-500"></i>
+                    使用教程
+                </h2>
+                <p class="text-slate-400 mb-6">启动 Claude Code 后，使用以下指令调用监控系统：</p>
+
+                <!-- SOP 1 -->
+                <div id="sop1" class="card rounded-xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold rounded-full">SOP 1</span>
+                        <h3 class="text-xl font-bold text-white">每日自动化健康扫描</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">建议每日05:00自动执行，扫描流量、库存、竞争三个核心维度</p>
+                    <div class="code-block rounded-lg p-4">
+                        <div class="text-slate-500 mb-2"># 指令</div>
+                        <div class="text-green-400">claude "/sorftime-shop-health-monitor 运行每日扫描"</div>
+                    </div>
+                    <div class="mt-4 bg-slate-900/50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-white mb-2">监控项：</h4>
+                        <ul class="text-sm text-slate-400 space-y-1">
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>流量结构健康度（自然流量占比）</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>库存健康度（可售天数预警）</li>
+                            <li><i class="fas fa-check text-green-400 mr-2"></i>竞争格局突变检测（Top3变化率）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SOP 2 -->
+                <div id="sop2" class="card rounded-xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold rounded-full">SOP 2</span>
+                        <h3 class="text-xl font-bold text-white">每周策略优化报告</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">建议每周日执行，分析类目竞争格局、流量词效能、季节性预判</p>
+                    <div class="code-block rounded-lg p-4">
+                        <div class="text-slate-500 mb-2"># 指令</div>
+                        <div class="text-green-400">claude "/sorftime-shop-health-monitor 生成周报"</div>
+                    </div>
+                    <div class="mt-4 bg-slate-900/50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-white mb-2">报告内容：</h4>
+                        <ul class="text-sm text-slate-400 space-y-1">
+                            <li><i class="fas fa-check text-blue-400 mr-2"></i>市场环境变化（搜索量、新进入者）</li>
+                            <li><i class="fas fa-check text-blue-400 mr-2"></i>自身表现分析（排名稳定性、品牌词增长）</li>
+                            <li><i class="fas fa-check text-blue-400 mr-2"></i>下周行动清单（优先级排序）</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SOP 3 -->
+                <div id="sop3" class="card rounded-xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-bold rounded-full">SOP 3</span>
+                        <h3 class="text-xl font-bold text-white">月度深度诊断报告</h3>
+                    </div>
+                    <p class="text-slate-400 mb-4">建议每月1日执行，六维评分卡 + 风险预警 + 下月目标设定</p>
+                    <div class="code-block rounded-lg p-4">
+                        <div class="text-slate-500 mb-2"># 指令</div>
+                        <div class="text-green-400">claude "/sorftime-shop-health-monitor 生成月报"</div>
+                    </div>
+                    <div class="mt-4 bg-slate-900/50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-white mb-2">输出文件：</h4>
+                        <ul class="text-sm text-slate-400 space-y-1">
+                            <li><i class="fas fa-file text-purple-400 mr-2"></i>月度诊断报告.md（详细分析）</li>
+                            <li><i class="fas fa-file text-purple-400 mr-2"></i>风险预警面板.json（红黄绿灯状态）</li>
+                            <li><i class="fas fa-file text-purple-400 mr-2"></i>下月目标设定.md（可执行KPI）</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Output -->
+            <section id="output" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-file-export text-orange-500"></i>
+                    输出文件
+                </h2>
+                <div class="card rounded-xl p-6">
+                    <p class="text-slate-400 mb-4">所有报告将自动生成到以下目录结构：</p>
+                    <div class="code-block rounded-lg p-4 text-sm">
+                        <pre class="text-slate-300">./output/
+├── daily-report-YYYYMMDD.md          # 每日健康日报
+├── weekly-report-weekNN.md           # 每周策略报告
+├── monthly-report-YYYYMM.md          # 月度深度诊断
+└── alerts/
+    ├── inventory-warning.json        # 库存预警
+    └── competition-alert.json        # 竞争预警</pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section id="faq" class="mb-16">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fas fa-question-circle text-orange-500"></i>
+                    常见问题
+                </h2>
+                <div class="space-y-4">
+                    <div class="card rounded-xl p-5">
+                        <h4 class="font-semibold text-white mb-2">Q: 如何获取类目NodeID？</h4>
+                        <p class="text-slate-400 text-sm">A: 使用 Sorftime 的类目搜索功能，找到主营类目后查看节点ID；或在亚马逊类目页面URL中提取 node 参数。</p>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h4 class="font-semibold text-white mb-2">Q: 可以监控多个ASIN吗？</h4>
+                        <p class="text-slate-400 text-sm">A: 可以，在配置参数的"核心ASIN"中添加多个ASIN即可，系统会自动遍历监控。</p>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h4 class="font-semibold text-white mb-2">Q: 如何设置定时自动执行？</h4>
+                        <p class="text-slate-400 text-sm">A: Windows 用户可使用任务计划程序(Task Scheduler)设置定时任务；或使用一键启动脚本中的示例命令。</p>
+                    </div>
+                    <div class="card rounded-xl p-5">
+                        <h4 class="font-semibold text-white mb-2">Q: 预警阈值可以自定义吗？</h4>
+                        <p class="text-slate-400 text-sm">A: 可以，在配置参数的"预警阈值"中调整各项临界值，适配你的运营策略。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center text-slate-500 text-sm pb-8">
+                <p>© 2026 Sorftime Smart 1 · 基于《亚马逊2026增长指南》第06篇</p>
+                <p class="mt-2">技术架构：Claude Code + Sorftime MCP + 三级自动化工作流</p>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

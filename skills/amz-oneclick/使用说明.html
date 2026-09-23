@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>amz-oneclick 总控台 · 一键口令卡</title>
+</head>
+<body style="margin:0;padding:32px 20px;background:#f6f7f9;font-family:-apple-system,'Segoe UI','Microsoft YaHei',sans-serif;color:#1f2329;line-height:1.65;">
+<div style="max-width:980px;margin:0 auto;">
+
+  <div style="background:linear-gradient(135deg,#1d4ed8 0%,#0f766e 100%);border-radius:16px;padding:28px 30px;color:#fff;">
+    <div style="font-size:13px;letter-spacing:2px;opacity:.85;">SORFTIME · AMAZON 全链路</div>
+    <h1 style="margin:8px 0 6px;font-size:28px;font-weight:700;">amz-oneclick 总控台</h1>
+    <p style="margin:0;font-size:15px;opacity:.92;">一个入口，调度全部亚马逊 skill。说一句「一键 XX」即可，路由、串联、交付都由它负责。</p>
+  </div>
+
+  <h2 style="font-size:18px;margin:30px 0 12px;padding-left:10px;border-left:4px solid #1d4ed8;">核心 5 · 一键口令</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;">
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;">
+      <div style="display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">一键市场</div>
+      <div style="font-weight:700;margin:10px 0 4px;font-size:16px;">amz-market-analysis</div>
+      <div style="font-size:14px;color:#4b5563;">11 维评分判断类目值不值得进、价格带甜区、品牌垄断与变体缺口。</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:10px;">最少输入：品类名 或 类目 nodeId</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;">
+      <div style="display:inline-block;background:#ecfdf5;color:#047857;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">一键找货</div>
+      <div style="font-weight:700;margin:10px 0 4px;font-size:16px;">amz-supply-chain</div>
+      <div style="font-size:14px;color:#4b5563;">1688 找工厂/货源、候选对比、Amazon↔1688 跨平台价差。</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:10px;">最少输入：产品名 或 目标 ASIN（domain=601）</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;">
+      <div style="display:inline-block;background:#fef3c7;color:#b45309;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">一键VOC</div>
+      <div style="font-weight:700;margin:10px 0 4px;font-size:16px;">multi-asin-voc-analysis</div>
+      <div style="font-size:14px;color:#4b5563;">8-12 个竞品 ASIN 评论深挖，出「谁能打、打哪里、凭什么」击破作战包。</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:10px;">最少输入：品类名 + 竞品 ASIN 清单</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;">
+      <div style="display:inline-block;background:#fce7f3;color:#be185d;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">一键广告</div>
+      <div style="font-weight:700;margin:10px 0 4px;font-size:16px;">amz-ad-planning</div>
+      <div style="font-size:14px;color:#4b5563;">纯 Sorftime 关键词数据出活动结构、预算分配、出价与否定词策略。</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:10px;">最少输入：目标 ASIN 或 关键词表</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;">
+      <div style="display:inline-block;background:#ede9fe;color:#6d28d9;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">一键守盘</div>
+      <div style="font-weight:700;margin:10px 0 4px;font-size:16px;">sorftime-shop-health-monitor</div>
+      <div style="font-size:14px;color:#4b5563;">自有店铺六维健康度：每日扫描 / 每周策略 / 月度深度诊断。</div>
+      <div style="font-size:12px;color:#9ca3af;margin-top:10px;">最少输入：自有 ASIN + 类目 nodeId + 预警阈值</div>
+    </div>
+
+  </div>
+
+  <h2 style="font-size:18px;margin:32px 0 12px;padding-left:10px;border-left:4px solid #1d4ed8;">预设流水线 · 一条命令跑一串</h2>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="background:#f3f4f6;text-align:left;">
+          <th style="padding:11px 14px;font-weight:600;">流水线</th>
+          <th style="padding:11px 14px;font-weight:600;">怎么喊</th>
+          <th style="padding:11px 14px;font-weight:600;">环节序列</th>
+          <th style="padding:11px 14px;font-weight:600;">适合</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-top:1px solid #f0f1f3;">
+          <td style="padding:11px 14px;font-weight:600;color:#1d4ed8;">P1 类目可行性</td>
+          <td style="padding:11px 14px;">一键跑类目可行性：XXX</td>
+          <td style="padding:11px 14px;color:#4b5563;">市场分析 → 找货源 → 算利润</td>
+          <td style="padding:11px 14px;color:#4b5563;">有品类名，评估要不要进</td>
+        </tr>
+        <tr style="border-top:1px solid #f0f1f3;background:#fafbfc;">
+          <td style="padding:11px 14px;font-weight:600;color:#1d4ed8;">P2 竞品击破</td>
+          <td style="padding:11px 14px;">一键击破这批竞品</td>
+          <td style="padding:11px 14px;color:#4b5563;">多ASIN VOC → 广告规划（+Listing）</td>
+          <td style="padding:11px 14px;color:#4b5563;">已锁定竞品 ASIN 清单</td>
+        </tr>
+        <tr style="border-top:1px solid #f0f1f3;">
+          <td style="padding:11px 14px;font-weight:600;color:#1d4ed8;">P3 新品启动</td>
+          <td style="padding:11px 14px;">一键新品启动：XXX</td>
+          <td style="padding:11px 14px;color:#4b5563;">市场分析 → 找货源 → 广告规划</td>
+          <td style="padding:11px 14px;color:#4b5563;">确定要上，出启动方案</td>
+        </tr>
+        <tr style="border-top:1px solid #f0f1f3;background:#fafbfc;">
+          <td style="padding:11px 14px;font-weight:600;color:#1d4ed8;">P4 守盘周报</td>
+          <td style="padding:11px 14px;">一键守盘周报</td>
+          <td style="padding:11px 14px;color:#4b5563;">店铺健康度（周策略）</td>
+          <td style="padding:11px 14px;color:#4b5563;">自有店铺例行巡检</td>
+        </tr>
+        <tr style="border-top:1px solid #f0f1f3;">
+          <td style="padding:11px 14px;font-weight:600;color:#b45309;">P5 全链路</td>
+          <td style="padding:11px 14px;">一键全流程：XXX</td>
+          <td style="padding:11px 14px;color:#4b5563;">P1 + P2 + P4 合并</td>
+          <td style="padding:11px 14px;color:#4b5563;">完整跑一遍（消耗最大，会二次确认）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="font-size:18px;margin:32px 0 12px;padding-left:10px;border-left:4px solid #1d4ed8;">执行方式</h2>
+  <ol style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px 18px 18px 38px;font-size:14px;color:#374151;margin:0;">
+    <li>自动跑体检：检查子 skill 是否齐 + Sorftime 通道是否可用。</li>
+    <li>路由：按你的口令或语义命中对应子 skill。</li>
+    <li>加载并执行：实际读取子 skill 的 SKILL.md，按其规范跑，不凭记忆复述。</li>
+    <li>串联：中间产物落盘到 <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:13px;">_work/amz-oneclick/&lt;run-id&gt;/</code>，环间按交接字段传参。</li>
+    <li>交付：中文单文件 HTML 报告，多环节合并为一份总报告。</li>
+  </ol>
+
+  <div style="margin-top:26px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:18px 20px;font-size:14px;color:#9a3412;">
+    <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:280px;">
+        <strong style="font-size:15px;">没配置数据通道？</strong>
+        <div style="margin-top:8px;">通过专属通道注册并领 7 天试用：</div>
+        <div style="margin-top:6px;">
+          <a href="https://open.sorftime.com/home?tag=ODY2OA~~" style="color:#c2410c;font-weight:600;word-break:break-all;">open.sorftime.com/home?tag=ODY2OA~~</a>
+        </div>
+        <div style="margin-top:14px;">
+          专属优惠码
+          <span style="display:inline-block;background:#c2410c;color:#fff;font-weight:700;font-size:15px;letter-spacing:2px;padding:3px 14px;border-radius:6px;margin-left:4px;">8668</span>
+        </div>
+        <div style="margin-top:8px;font-size:13px;color:#b45309;">注册时填写优惠码，即可享受专属优惠。</div>
+      </div>
+      <div style="text-align:center;flex:0 0 auto;">
+        <a href="assets/sorftime-register-qr.jpg" target="_blank">
+          <img src="assets/sorftime-register-qr.jpg" alt="Sorftime 专属注册通道二维码" style="height:300px;width:auto;display:block;border-radius:8px;border:1px solid #fed7aa;background:#fff;padding:4px;">
+        </a>
+        <div style="font-size:12px;color:#b45309;margin-top:8px;">扫码注册 · 领 7 天试用</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:22px;font-size:12px;color:#9ca3af;text-align:center;">
+    amz-oneclick · 技能目录 version 1.1 · 2026-09-14
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "project": "我的品类-主品简称",          // 工作台标题，如 "Stanley-StayChill-Pitcher-US"
+  "marketplace": "US",                   // Sorftime domain: 1=US（也支持 2=UK 等，见 skill 文档）
+  "main_asin": "B0XXXXXXXX",             // 用户自有主品 ASIN
+  "main_price": 0,                       // 主品当前售价（USD），可选
+  "boundary": "产品边界描述：同赛道直系 = 哪些产品算直接竞品、价位区间、哪些不算。例如：不锈钢保温 + 大容量(>=64oz) 盛饮容器，价位 $19-70；玻璃壶=不入选。",
+  "competitors": [
+    {
+      "asin": "B0YYYYYYYY",
+      "tier": "P1",
+      "alias": "竞品短名（显示用）",
+      "role": "关系标注，如 same-brand-cannibal / direct-size-rival / value-anchor",
+      "why": "为什么它是竞品（自动发现时由 AI 填写，人工确认）"
+    }
+  ],
+  "schedule_note": "本配置不含任何账户密钥。抓数使用你本机的 sorftime CLI profile（sorftime whoami 可查），或交给 agent 时说明数据源。"
+}

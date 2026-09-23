@@ -1,0 +1,31 @@
+# 压缩包 / 临时文件
+*.zip
+*.tar.gz
+*.7z
+*.tmp
+*.bak
+
+# 运行产物
+outputs/
+reports/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 本地凭据 —— 绝对不要提交
+.env
+*.env
+credentials.json
+auth.json
+cc-switch*.db
