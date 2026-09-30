@@ -74,7 +74,7 @@
 ### 第 1 步 · 放技能文件
 
 ```bash
-git clone https://github.com/<你的用户名>/sorftime-amazon-seller-skills.git
+git clone https://github.com/wangcy9629-cpu/sorftime-amazon-seller-skills.git
 cd sorftime-amazon-seller-skills
 
 # 按你用的工具选一条（把 skills/ 下所有目录复制过去）
